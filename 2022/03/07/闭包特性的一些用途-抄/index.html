@@ -1,0 +1,724 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="学习中闭包的特性利用笔记&amp;&amp;python函数装饰器本质是python的’一切皆对象’(雾) 闭包的特性利用闭包的1个重要特性是:  python里嵌套函数阔以记得使用过的外部函数甚么意思捏?eg: 123456def foo():    def bar():        print(&quot;dick&quot;)    return bar  #这里是return bar而8">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python闭包特性&amp;&amp;python函数装饰器">
+<meta property="og:url" content="http://example.com/2022/03/07/%E9%97%AD%E5%8C%85%E7%89%B9%E6%80%A7%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E9%80%94-%E6%8A%84/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="学习中闭包的特性利用笔记&amp;&amp;python函数装饰器本质是python的’一切皆对象’(雾) 闭包的特性利用闭包的1个重要特性是:  python里嵌套函数阔以记得使用过的外部函数甚么意思捏?eg: 123456def foo():    def bar():        print(&quot;dick&quot;)    return bar  #这里是return bar而8">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/%E6%A2%A6%E9%BE%99%E5%90%88%E7%85%A7.png">
+<meta property="article:published_time" content="2022-03-07T02:39:54.000Z">
+<meta property="article:modified_time" content="2024-03-08T15:17:27.237Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="寄科">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/%E6%A2%A6%E9%BE%99%E5%90%88%E7%85%A7.png">
+  
+  
+  
+  <title>python闭包特性&amp;&amp;python函数装饰器 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background1.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="python闭包特性&amp;&amp;python函数装饰器"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-03-07 10:39" pubdate>
+          March 7, 2022 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          912 words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          8 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">python闭包特性&amp;&amp;python函数装饰器</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>学习中闭包的特性利用笔记&amp;&amp;python函数装饰器<br>本质是python的’一切皆对象’(雾)</p>
+<h1 id="闭包的特性利用"><a href="#闭包的特性利用" class="headerlink" title="闭包的特性利用"></a>闭包的特性利用</h1><p>闭包的1个重要特性是:  python里嵌套函数阔以记得使用过的外部函数<br>甚么意思捏?<br>eg:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">foo</span>():<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">bar</span>():<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;dick&quot;</span>)<br>    <span class="hljs-keyword">return</span> bar  <span class="hljs-comment">#这里是return bar而8是return bar()</span><br>a=foo()<br>a()<br></code></pre></td></tr></table></figure>
+<p>结果:</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>dick</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>上述代码函数内写了个函数bar(), 并把bar()函数作为1个变量返回(因为py中，函数和变量等价，等价，等价)</p>
+<p>而在此介绍py闭包的一个特性:嵌套函数会记住使用过的外部变量</p>
+<p>eg:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">foo</span>(<span class="hljs-params">e</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">bar</span>(<span class="hljs-params">e</span>):<br>        <span class="hljs-built_in">print</span>(e)<br>    <span class="hljs-keyword">return</span> bar<br><br>a=foo(<span class="hljs-string">&quot;shit&quot;</span>)<br>a()<br></code></pre></td></tr></table></figure>
+
+<p>结果:</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>shit</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>上述代码和python的特性8符合，当return bar之后，e作为局部变量会被销毁，但是结果却成功输出了，这就因为python的另一个特性: 嵌套函数会记住使用过的外部变量(局部变量销毁后仍会被嵌套函数记住)</p>
+<p>所以这个特性有毛用呢？</p>
+<h2 id="用来生成8同函数"><a href="#用来生成8同函数" class="headerlink" title="用来生成8同函数"></a>用来生成8同函数</h2><p>eg:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">foo</span>(<span class="hljs-params">e1</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">bar</span>(<span class="hljs-params">e2</span>):<br>        <span class="hljs-keyword">return</span> e1+e2<br>    <span class="hljs-keyword">return</span> bar<br><br>a=foo(<span class="hljs-number">100</span>)<br>a(<span class="hljs-number">200</span>)<br></code></pre></td></tr></table></figure>
+<p>result:</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>300<br>上述例子就可以利用该特性批量生成8同函数</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>还有什么用呢?好像没了</p>
+<h2 id="可以取代生成全局变量"><a href="#可以取代生成全局变量" class="headerlink" title="可以取代生成全局变量"></a>可以取代生成全局变量</h2><p>eg:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">x</span>(<span class="hljs-params">a,b</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">y</span>(<span class="hljs-params">a,b</span>):<br>        <span class="hljs-built_in">print</span>(a,b)<br>    <span class="hljs-keyword">return</span> y<br></code></pre></td></tr></table></figure>
+
+<h1 id="函数装饰器"><a href="#函数装饰器" class="headerlink" title="函数装饰器"></a>函数装饰器</h1><p>装饰器本质是函数或者类，他的作用是: 为原来的函数增加新的功能。装饰，顾名思义，就是在事物8变的基础上实现一些扩展</p>
+<p>应用场景: 某天，你用python写了1堆函数，然后你突然想为这些函数加1个相同的功能，比如print(“d1ck”)，那么1个1个改就很麻烦，那么装饰器就派上了用场~</p>
+<p>eg:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">func1</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;abc&quot;</span>)<br>    <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">ch4nge_func</span>(<span class="hljs-params">func1</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">func2</span>(<span class="hljs-params">func1</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;d3f&quot;</span>)<br>        <span class="hljs-keyword">return</span> func1<br>    <span class="hljs-keyword">return</span> func2<br><br>f00=ch4nge_func(func1)<br>f00()<br></code></pre></td></tr></table></figure>
+<p>结果:<br>    &gt;&gt;&gt;abc<br>    &gt;&gt;&gt;d3f</p>
+<p>这个函数我没看懂….感觉有点毛病(它func2返回的8还是原来的func1吗?)，但是8太要紧，反正只要知道装饰器大致都是这么写的就好了，然后这样做也实现了修改函数的功能</p>
+<p>然后研究了1下，把这认为是装饰器的1种新姿势吧….上面代码定义ch4nge_func里把return func1换成func1()，结果也还是一样的</p>
+<p>然后写完了ch4nge_func后，再进行调用就阔以实现修改函数的目的啦，有2种调用方式，1种是func2&#x3D;ch4nge_func(func1)就改成了新函数(若8想新生成函数也可func1&#x3D;ch4nge_func(func1))；还有1种那就是用python的语法糖，比如上述代码用语法糖简化就是: </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">ch4nge_func</span>(<span class="hljs-params">func1</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">func2</span>(<span class="hljs-params">func1</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;d3f&quot;</span>)<br>        <span class="hljs-keyword">return</span> func1<br>    <span class="hljs-keyword">return</span> func2<br><span class="hljs-meta">@ch4nge_func</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func1</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;abc&quot;</span>)<br><span class="hljs-comment">#这里的@ch4nge_func等价于----func1=ch4nge_func(func1)</span><br></code></pre></td></tr></table></figure>
+
+<p>再深入学习一下，了解一下装饰器的另1特性</p>
+<h2 id="装饰器修改函数后改变了原函数名字-functools-wraps"><a href="#装饰器修改函数后改变了原函数名字-functools-wraps" class="headerlink" title="装饰器修改函数后改变了原函数名字: functools.wraps"></a>装饰器修改函数后改变了原函数名字: functools.wraps</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">abc</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;4bc&quot;</span>)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">ch4nge_func</span>(<span class="hljs-params">func1</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">func2</span>():<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;d3f&quot;</span>)<br>        func1()<br>    <span class="hljs-keyword">return</span> func2<br><br>abc=ch4nge_func(abc)<br><span class="hljs-built_in">print</span>(abc.__name__)<br></code></pre></td></tr></table></figure>
+<p>运行结果:<br>    &gt;&gt;&gt;func2</p>
+<p>然而你想的打印结果应该是 abc 对8对? 这是因为func2重写了func1和其注释文档，多数情况下无伤大雅，如果你想保持原状，只要用到functools库里的wraps函数就阔以了</p>
+<p>在定义装饰器函数时第一行顺便写入@wraps(‘你传入的func’)就阔以了，eg:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> fuctools<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">ch4nge</span>(<span class="hljs-params">func1</span>):<br><span class="hljs-meta">    @wraps(<span class="hljs-params">fucn1</span>)</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">func2</span>():<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;FuuuuuuuuuuuCk&quot;</span>)<br>        <span class="hljs-keyword">return</span> func1<br>    <span class="hljs-keyword">return</span> func2()<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">abc</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;4bc&quot;</span>)<br>abc=ch4nge(abc)<br><span class="hljs-built_in">print</span>(abc.__name__)<br><br></code></pre></td></tr></table></figure>
+<p>结果: &gt;&gt;&gt;abc</p>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><p>在web中检查某用户是否有权限访问web某页面: 没看懂，就8贴源码了<br>总之原理先搞懂，应用以后应该会用得上的(咕)</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AF%84%E7%A7%91/" class="category-chain-item">寄科</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%AF%84%E7%A7%91/%E7%BC%96%E7%A8%8B/" class="category-chain-item">编程</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AF%84%E7%A7%91/" class="print-no-link">#寄科</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>python闭包特性&amp;&amp;python函数装饰器</div>
+      <div>http://example.com/2022/03/07/闭包特性的一些用途-抄/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>March 7, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/03/24/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" title="命令执行漏洞">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">命令执行漏洞</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/11/xxe%E6%94%BB%E5%87%BB(2)/" title="xxe攻击(2)">
+                        <span class="hidden-mobile">xxe攻击(2)</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

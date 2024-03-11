@@ -1,0 +1,683 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="挖个坑，等复盘，最近实验太多了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="miniL_ctf">
+<meta property="og:url" content="http://example.com/2022/05/11/miniL-ctf/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="挖个坑，等复盘，最近实验太多了">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-05-11T02:44:53.000Z">
+<meta property="article:modified_time" content="2024-03-08T16:12:32.900Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="赛事">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>miniL_ctf - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background1.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="miniL_ctf"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-05-11 10:44" pubdate>
+          May 11, 2022 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.6k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          14 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">miniL_ctf</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>挖个坑，等复盘，最近实验太多了</p>
+<span id="more"></span>
+<h1 id="web"><a href="#web" class="headerlink" title="web"></a>web</h1><h2 id="checkin-CBC字节翻转攻击-kali-padbuster"><a href="#checkin-CBC字节翻转攻击-kali-padbuster" class="headerlink" title="checkin -CBC字节翻转攻击&amp;kali-padbuster"></a>checkin -CBC字节翻转攻击&amp;kali-padbuster</h2><p>进入页面，抓包，目的是伪造token使自己身份成为vip，给出了源码，加密是AES-CBC加密<br>现学了go的gin框架，AES加密，然后没做出来…..<br>赛后复盘<br>看了看wp，可以用kali里现成的工具padbuster<br>原文来自: <a target="_blank" rel="noopener" href="https://zing.gitbooks.io/kali-lunix/content/06x/6x18_PadBuster.html">kali工具使用中文说明书</a></p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc"><span class="hljs-section">:~# 破坏者</span><br><span class="hljs-section">+-----</span><br>---------------------------------------+<br>| PadBuster - v0.3.3 |<br>| Brian Holyfield - Gotham 数字科学 |<br>|<br><br><span class="hljs-section">                     |</span><br><span class="hljs-section">+--------------------------------------------+</span><br><span class="hljs-code">  使用：padBuster.pl URL EncryptedSample BlockSize [选项]</span><br>其中： URL = 目标 URL（如果适用，还有查询字符串）<br><span class="hljs-code">       EncryptedSample = 您要测试的加密值。必须</span><br><span class="hljs-code">                         也存在于 URL、PostData 或 Cookie 中</span><br><span class="hljs-code">       BlockSize = 算法使用的块大小</span><br>选项：<br><span class="hljs-code">   -auth [用户名：密码]：HTTP 基本身份验证</span><br><span class="hljs-code">   -bruteforce：对第一个块执行蛮力</span><br><span class="hljs-code">   -ciphertext [Bytes]：中间字节的密文（十六进制编码）</span><br><span class="hljs-code">       -cookies [HTTP Cookies]: Cookies (name1=value1; name2=value2)</span><br><span class="hljs-code">       -encoding [0-4]：样本的编码格式（默认0）</span><br><span class="hljs-code">                        0=Base64，1=下十六进制，2=上十六进制</span><br><span class="hljs-code">                        3=.NET UrlToken，4=WebSafe Base64</span><br><span class="hljs-code">       -encodedtext [编码字符串]：要加密的数据（编码）</span><br><span class="hljs-code">       -error [错误字符串]：填充错误消息</span><br><span class="hljs-code">       -headers [HTTP 标头]：自定义标头 (name1::value1;name2::value2)</span><br><span class="hljs-code">   -interactive：提示确认解密字节</span><br><span class="hljs-code">   -intermediate [Bytes]：密文的中间字节（十六进制编码）</span><br><span class="hljs-code">   -log：生成日志文件（创建文件夹 PadBuster.DDMMYY）</span><br><span class="hljs-code">   -noencode：不对负载进行 URL 编码（默认编码）</span><br><span class="hljs-code">   -noiv：样本不包括 IV（解密第一个块）</span><br><span class="hljs-code">       -plaintext [String]：要加密的纯文本</span><br><span class="hljs-code">       -post [发布数据]：HTTP 发布数据字符串</span><br><span class="hljs-code">   -prefix [Prefix]：附加到每个样本的前缀字节（编码）</span><br><span class="hljs-code">   -proxy [地址：端口]：使用 HTTP/S 代理</span><br><span class="hljs-code">   -proxyauth [用户名：密码]：代理身份验证</span><br><span class="hljs-code">   -resume [Block Number]：在这个block number处恢复</span><br><span class="hljs-code">   -usebody：使用响应正文内容进行响应分析阶段</span><br><span class="hljs-code">       -verbose：要详细</span><br><span class="hljs-code">       -veryverbose：非常详细（仅限调试）</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="密码学的一点科普"><a href="#密码学的一点科普" class="headerlink" title="密码学的一点科普"></a>密码学的一点科普</h3><p><a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1651159916892970446">密码学的科普</a></p>
+<p>块加密: 就是把密文分成块，再加密(不够的补全)<br>ECB: 最早的加密，由于所有的分组的加密方式都一致，因此难以抵挡统计分析攻击，易被破解<br>CBC: 每个明文块先与前一个密文块进行异或后，再进行加密,每个密文块都依赖于它前面的所有明文块。同时，为了保证每条消息的唯一性，在第一个块中需要使用初始化向量IV(第一明文块M1加密的时候，因为前面没有加密的密文，所以需要与一个初始化向量（IV）进行XOR（异或）)<br>OFM: 是先用块加密器生成密钥流（Keystream），然后再将密钥流与明文流异或得到密文流，解密是先用块加密器生成密钥流，再将密钥流与密文流异或得到明文，由于异或操作的对称性所以加密和解密的流程是完全一样的</p>
+<p>填充模式:<br>ZeroPadding，数据长度不对齐时使用0填充，否则不填充。<br>PKCS7Padding，假设数据长度需要填充n(n&gt;0)个字节才对齐，那么填充n个字节，每个字节都是n;如果数据本身就已经对齐了，则填充一块长度为块大小的数据，每个字节都是块大小。<br>PKCS5Padding，PKCS7Padding的子集，块大小固定为8字节。<br>由于使用PKCS7Padding&#x2F;PKCS5Padding填充时，最后一个字节肯定为填充数据的长度，所以在解密后可以准确删除填充的数据，而使用ZeroPadding填充时，没办法区分真实数据与填充数据，所以只适合以\0结尾的字符串加解密</p>
+<h3 id="针对CBC的字节翻转攻击"><a href="#针对CBC的字节翻转攻击" class="headerlink" title="针对CBC的字节翻转攻击"></a>针对CBC的字节翻转攻击</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/csu_vc/article/details/79619309">链接</a><br>理解了CBC加密的过程后，想想解密怎么搞，就是翻转攻击了:<br>CBC解密的过程<br>从密文中提取出IV，然后将密文分组。<br>使用密钥对第一组的密文解密，然后和IV进行xor得到明文。<br>使用密钥对第二组密文解密，然后和2中的密文xor得到明文。<br>重复2-3，直到最后一组密文。</p>
+<p>前一块Ciphertext用来产生下一块明文，如果我们改变前一块Ciphertext中的一个字节，然后和下一块解密后的密文xor，就可以得到一个不同的明文，而这个明文是我们可以控制的。也就是通过改变上一组的密文，来改变本组的明文<br>这个文章讲得不错: <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/1001b4c2adeb">链接</a><br>具体: 比如要改变第二个块明文的某个字节，就把第一个密文的对应字节改了，然后，再把iv改了(所以iv是可以控制的吗….因为iv是随机生成的，而且我们可见，那自然是可以改变的…)</p>
+<h2 id="sql注入-根据sql版本特性进行注入"><a href="#sql注入-根据sql版本特性进行注入" class="headerlink" title="sql注入-根据sql版本特性进行注入"></a>sql注入-根据sql版本特性进行注入</h2><p>主要问题出在闭合上，构造的的payload不知道为什么在环境里无法回显<br>进入页面查看源码，注释里给了查询语句，可以知道表名: select * from users where username&#x3D;’$username’ and password&#x3D;’$password’; </p>
+<p>#、– 、–+、&#x2F;**&#x2F;都过滤了，无错误回显，sleep也过滤了，但是可以堆叠注入<br>当时想到的是利用’&#39;注释引号，然后进行布尔注入，但是，在构造好了payload并检查后，发现无论如何都不回显，就很疑惑<br>于是尝试自己搭sql环境试试，我寻思搭个sql环境肯定能找到好的教程吧…然后csdn里的教程不负众望的让我搭建失败了，然后就摆烂了….<br>自己构建的不知道为毛不回显的payload: </p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">select * <span class="hljs-keyword">from</span><span class="hljs-built_in"> users </span>where <span class="hljs-attribute">username</span>=<span class="hljs-string">&#x27;\&#x27;</span> <span class="hljs-keyword">and</span> <span class="hljs-attribute">password</span>=<span class="hljs-string">&#x27; || username=admin;insert into users \&#x27;</span>; <br></code></pre></td></tr></table></figure>
+<p>wp思路:<br>注释符可以用%00代替(我当时闭合时是用insert into 闭合的，不知道为什么出错了)<br>先盲注出版本8.0.26,搜到此版本新特性table可以用来注入(怎么搜的，这也太吊了? )</p>
+<p>payload:</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-attribute">username</span>=\<br><span class="hljs-attribute">password</span>=|| (<span class="hljs-string">&quot;a&quot;</span>,<span class="hljs-string">&quot;a&quot;</span>,<span class="hljs-string">&quot;a&quot;</span>)&lt;(table users);%00<br>获取sql版本: 8.0<br></code></pre></td></tr></table></figure>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs lasso">username=\<br>password= ||ascii(mid(username,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>))=num;%<span class="hljs-number">00</span><br>这个mid盲注没见过<span class="hljs-params">...</span>.<br>可以爆出username和password<span class="hljs-params">...</span>..(不对啊，我记得当时ascii明明被屏蔽了来着，于是还在想怎么用别的方式进行盲注<span class="hljs-params">...</span>.)<br></code></pre></td></tr></table></figure>
+<h2 id="include"><a href="#include" class="headerlink" title="include"></a>include</h2><p>token是简单的base64转码，转了是php序列化后的字符码，然后把里面的Tourist改成Lteam就行了<br>O:4”User”:1:{s:9:”usergroup”;s:7:”Tourist”;}</p>
+<p>转了之后就是文件上传漏洞了，没有任何检查可以直接上传，然后蚁剑连就能看到flag</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF/%E8%B5%9B%E4%BA%8B/" class="category-chain-item">赛事</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%B5%9B%E4%BA%8B/" class="print-no-link">#赛事</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>miniL_ctf</div>
+      <div>http://example.com/2022/05/11/miniL-ctf/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>May 11, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/05/20/Th1s_summer_dlc_0x01/" title="Th1s_summer_特殊dlc的启发_0x01">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Th1s_summer_特殊dlc的启发_0x01</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/04/26/SSTI%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%E5%A7%BF%E5%8A%BF/" title="SSTI模板注入姿势">
+                        <span class="hidden-mobile">SSTI模板注入姿势</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

