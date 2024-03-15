@@ -27,7 +27,7 @@
 <meta property="og:image" content="http://example.com/images/jvav.2.png">
 <meta property="og:image" content="http://example.com/images/jvav/3.png">
 <meta property="article:published_time" content="2022-09-09T03:21:07.000Z">
-<meta property="article:modified_time" content="2024-03-08T15:59:12.417Z">
+<meta property="article:modified_time" content="2024-03-14T06:50:22.297Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="寄科">
 <meta property="article:tag" content="开发">
@@ -237,7 +237,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          807 words
+          576 words
         
       </span>
     
@@ -248,7 +248,7 @@
         
         
         
-          7 mins
+          5 mins
         
       </span>
     
@@ -294,24 +294,19 @@
 <h2 id="常见概念问题"><a href="#常见概念问题" class="headerlink" title="常见概念问题"></a>常见概念问题</h2><h3 id="java对象：PO-POJO-VO-BO-DAO-DTO"><a href="#java对象：PO-POJO-VO-BO-DAO-DTO" class="headerlink" title="java对象：PO&#x2F;POJO&#x2F;VO&#x2F;BO&#x2F;DAO&#x2F;DTO"></a>java对象：PO&#x2F;POJO&#x2F;VO&#x2F;BO&#x2F;DAO&#x2F;DTO</h3><p>POJO(Plain Old Java Object): 字面意思是简单的java对象<br>一般其作用是中间对象，可转化为PO、DTO、VO</p>
 <p>JavaBean: 是一个遵循特定写法的Java类，其方法命名，构造及行为必须符合特定约定<br>这个类必须有一个无参构造函数，且这个函数是public的；<br>所有属性私有化（private）；<br>私有化的属性必须通过public类型的方法（getter和setter）暴露给其他程序<br>这个类应是可序列化的<br>作用: 通常用于封装数据，实现一些简单的功能，然后去被重用</p>
 <p>Bean: 可重复使用的组件<br>O&#x2F;R映射: object relational mapping，用于将对象和数据绑定起来<br>PO(persistent object，持久对象): 和O&#x2F;R映射有关，是与数据库里的表的数据相映射的java对象<br>EJB(Enterprise JavaBean): 定义了一个用于开发的标准</p>
-<h2 id="SSH分层"><a href="#SSH分层" class="headerlink" title="SSH分层"></a>SSH分层</h2><p>在表示层中，通过JSP页面展示信息<br>在交互层中，负责传送请求(Request)和接收响应(Response)，然后Struts根据配置文件(struts-config.xml)将ActionServlet接收到的Request委派给相应的Action处理，然后action进行对请求处理并转发给JSP页面。<br>在业务逻辑层，管理服务组件的Spring IoC容器负责向Struts2提供具体的Action对象，提供业务模型(Model)组件和该组件的协作对象数据处理(DAO)组件完成业务逻辑，并提供事务处理、缓冲池等容器组件以提升系统性能和保证数据的完整性。<br>在数据访问层，则依赖于Hibernate的对象化映射和数据库交互，处理DAO组件请求的数据，并返回处理结果，给业务逻辑层。</p>
-<h1 id="SpringBoot"><a href="#SpringBoot" class="headerlink" title="SpringBoot"></a>SpringBoot</h1><p>基于maven构建</p>
-<h2 id="Spring-IoC"><a href="#Spring-IoC" class="headerlink" title="Spring IoC"></a>Spring IoC</h2><h2 id="java注解"><a href="#java注解" class="headerlink" title="java注解@"></a>java注解@</h2><h1 id="Springboot"><a href="#Springboot" class="headerlink" title="Springboot"></a>Springboot</h1><h2 id="yml"><a href="#yml" class="headerlink" title=".yml"></a>.yml</h2><p><img src="/images/jvav/1.png" srcset="/img/loading.gif" lazyload><br>application.properties&#x3D;application.yaml&#x3D;.yml，格式不同</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">properties:</span> <br><span class="hljs-string">server.port=8080</span><br><span class="hljs-string">server.address=127.0.0.1</span><br><br><span class="hljs-string">yaml&amp;yml:</span><br><span class="hljs-attr">server:</span><br>    <span class="hljs-attr">port:</span> <span class="hljs-number">8080</span><br>    <span class="hljs-attr">address:</span> <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br></code></pre></td></tr></table></figure>
-<p>细节: 3个配置文件都存在，优先级: properties &gt; yml &gt; yaml</p>
-<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><p>缩进时8能用tab，只有空格    数值前必须有空格</p>
-<p>纯量(常量): </p>
+<h1 id="SpringBoot"><a href="#SpringBoot" class="headerlink" title="SpringBoot"></a>SpringBoot</h1><h2 id="Spring-IoC"><a href="#Spring-IoC" class="headerlink" title="Spring IoC"></a>Spring IoC</h2><h2 id="java注解"><a href="#java注解" class="headerlink" title="java注解@"></a>java注解@</h2><h1 id="7-配置"><a href="#7-配置" class="headerlink" title="7.配置"></a>7.配置</h1><p>springboot默认配置文件名称: application，在resource目录<br>pom.xml: maven的配置文件</p>
+<h2 id="yml"><a href="#yml" class="headerlink" title=".yml"></a>.yml</h2><p><img src="/images/jvav/1.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">properties:</span> <br><span class="hljs-string">server.port=8080</span><br><span class="hljs-string">server.address=127.0.0.1</span><br><br><span class="hljs-string">yaml&amp;yml:</span><br><span class="hljs-attr">server:</span><br>    <span class="hljs-attr">port:</span> <span class="hljs-number">8080</span><br>    <span class="hljs-attr">address:</span> <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br></code></pre></td></tr></table></figure>
+<p>缩进时8能用tab，只有空格<br>纯量(常量): </p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">msg1:</span> <span class="hljs-string">&#x27;H3y \n fuCk U !&#x27;</span> <span class="hljs-comment"># 单引忽略转义</span><br><span class="hljs-attr">msg1:</span> <span class="hljs-string">&quot;H3y \n fuCk U !&quot;</span> <span class="hljs-comment"># 双引识别转义</span><br></code></pre></td></tr></table></figure>
 <p>对象: 参上<br>数组: </p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">address:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">Beijing</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">shanghai</span><br><span class="hljs-attr">address:</span> [<span class="hljs-string">beijing</span>, <span class="hljs-string">shanghai</span>]<br></code></pre></td></tr></table></figure>
-
 <p>参数引用: </p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">name:</span> <span class="hljs-string">d1ck</span><br><span class="hljs-attr">student:</span> <br>    <span class="hljs-attr">name:</span> <span class="hljs-string">$&#123;name&#125;</span> <span class="hljs-comment"># 引用，value= d1ck</span><br>    <span class="hljs-attr">age:</span> <span class="hljs-number">18</span><br></code></pre></td></tr></table></figure>
 
-
 <h3 id="引用yml"><a href="#引用yml" class="headerlink" title="引用yml"></a>引用yml</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//法1</span><br><span class="hljs-meta">@Value(&quot;$&#123;server.port&#125;&quot;)</span> <span class="hljs-comment">//对象</span><br><span class="hljs-keyword">private</span> String name; <br><span class="hljs-meta">@Value(&quot;$(address[0])&quot;)</span>  <span class="hljs-comment">//数组</span><br><span class="hljs-keyword">private</span>(<span class="hljs-string">&quot;$&#123;address&#125;&quot;</span>);<br><span class="hljs-comment">//法2</span><br><span class="hljs-meta">@Autowired</span>              <span class="hljs-comment">//自动装配&quot;（Auto-wiring）</span><br><span class="hljs-keyword">private</span> Environment env1;         <span class="hljs-comment">//此处用org.springframework.core.env</span><br>System.out.println(env1.getProperty(<span class="hljs-string">&quot;address[0]&quot;</span>));<span class="hljs-comment">//用getProperty(String)</span><br><span class="hljs-comment">//法3</span><br><span class="hljs-meta">@Componment</span><br><span class="hljs-meta">@ConfigurationProperties(prefix=&quot;person&quot;)</span>  <span class="hljs-comment">//将yml对象注入java对象，前缀=person</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Student</span>&#123;<br>    <span class="hljs-keyword">private</span> String name;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> age;<br>    <span class="hljs-keyword">private</span> <br>&#125;<br><br><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> Student J0hn；<br><br></code></pre></td></tr></table></figure>
 
-<h2 id="profile配置"><a href="#profile配置" class="headerlink" title="profile配置"></a>profile配置</h2><h3 id="多profile文件"><a href="#多profile文件" class="headerlink" title="多profile文件"></a>多profile文件</h3><p>application.properties<br>application-dev: 一般指开发环境的配置   application-test    application-pro: 生产(product)环境 </p>
+<h2 id="profile配置"><a href="#profile配置" class="headerlink" title="profile配置"></a>profile配置</h2><h3 id="多profile文件"><a href="#多profile文件" class="headerlink" title="多profile文件"></a>多profile文件</h3><p>application-dev: 一般指开发环境的配置   application-test    application-pro: 生产(product)环境 </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">spring.profiles.active=dev<br></code></pre></td></tr></table></figure>
 <h3 id="yml文档"><a href="#yml文档" class="headerlink" title="yml文档"></a>yml文档</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java">---<br>server:<br>  port: <span class="hljs-number">8081</span><br>spring:<br>  profiles: dev<br>---<br>server:<br>  port: <span class="hljs-number">8082</span><br>spring:<br>  profiles: test<br>---<br>server:<br>  port: <span class="hljs-number">8083</span><br>spring:<br>  profiles: pro<br>---<br>spring:<br>  profiles:<br>    active: pro<br></code></pre></td></tr></table></figure>
 <h3 id="虚拟机激活"><a href="#虚拟机激活" class="headerlink" title="虚拟机激活"></a>虚拟机激活</h3><p><img src="/images/jvav.2.png" srcset="/img/loading.gif" lazyload><br>虚拟机参数方式，教程有点老了，自己搜</p>
@@ -320,7 +315,7 @@
 <p>UserService.java<br>DataQueryService.java<br>DataAnalysisService.java<br>QualityControlService.java<br>DataImportService.java</p>
 <p>StatisticalAnalysis.java<br>MachineLearningModel.java<br>DataPreprocessing.java<br>DataVisualization.java</p>
 <p>DataConverter.java<br>DataNormalization.java</p>
-
+<h1 id="1"><a href="#1" class="headerlink" title="1"></a>1</h1><h1 id="7"><a href="#7" class="headerlink" title="7"></a>7</h1>
                 
               </div>
             
