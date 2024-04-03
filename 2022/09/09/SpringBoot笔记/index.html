@@ -26,7 +26,7 @@
 <meta property="og:image" content="http://example.com/images/jvav/1.png">
 <meta property="og:image" content="http://example.com/images/jvav/3.png">
 <meta property="article:published_time" content="2022-09-09T03:21:07.000Z">
-<meta property="article:modified_time" content="2024-03-17T07:34:30.773Z">
+<meta property="article:modified_time" content="2024-03-21T02:20:07.817Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="寄科">
 <meta property="article:tag" content="开发">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          509 words
+          719 words
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          5 mins
+          6 mins
         
       </span>
     
@@ -308,7 +308,18 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">spring.profiles.active=dev<br></code></pre></td></tr></table></figure>
 <h3 id="yml文档"><a href="#yml文档" class="headerlink" title="yml文档"></a>yml文档</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java">---<br>server:<br>  port: <span class="hljs-number">8081</span><br>spring:<br>  profiles: dev<br>---<br>server:<br>  port: <span class="hljs-number">8082</span><br>spring:<br>  profiles: test<br>---<br></code></pre></td></tr></table></figure>
 <h3 id="项目配置加载顺序"><a href="#项目配置加载顺序" class="headerlink" title="项目配置加载顺序"></a>项目配置加载顺序</h3><p><img src="/images/jvav/3.png" srcset="/img/loading.gif" lazyload><br>(4个文件都会生效，1，2，3都有的，从1里找)</p>
-<h1 id="15"><a href="#15" class="headerlink" title="15"></a>15</h1><h2 id="junit"><a href="#junit" class="headerlink" title="junit"></a>junit</h2><h2 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h2>
+<h1 id="15"><a href="#15" class="headerlink" title="15"></a>15</h1><h2 id="junit"><a href="#junit" class="headerlink" title="junit"></a>junit</h2><h2 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h2><h1 id="store"><a href="#store" class="headerlink" title="store"></a>store</h1><p>依赖: lombok、spring web(构建web层)、mysql driver</p>
+<p>报错: java: 警告: 源发行版 17 需要目标发行版 17<br>warn: 在项目结构里切换了SDK，但是没有用，后来改了字节码，将其设置为11，然后用JDK17环境运行</p>
+<h2 id="git"><a href="#git" class="headerlink" title="git"></a>git</h2><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">git <span class="hljs-keyword">add </span>.<br>git commit -am <span class="hljs-string">&quot;f1rst_commit&quot;</span><br>git remote <span class="hljs-keyword">add </span><span class="hljs-keyword">origin </span><span class="hljs-string">&quot;url&quot;</span><br>git push -u <span class="hljs-keyword">origin </span>master<br></code></pre></td></tr></table></figure>
+<p>切换分支: 把master分支复制过来，新建v1.0分支(没人用master开发)</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">git checkout -<span class="hljs-keyword">b </span><span class="hljs-built_in">v1</span>.<span class="hljs-number">0</span> <span class="hljs-keyword">origin/master</span><br><span class="hljs-keyword"></span>git push <span class="hljs-keyword">origin </span>HEAD -u<br></code></pre></td></tr></table></figure>
+
+<h2 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h2><p>注解: @RestController、@RequestMapping(“url”)</p>
+<p>ctrl+f9: 在只修改代码的时候不需要重新停止运行，类似热部署</p>
+<h3 id="数据库部分"><a href="#数据库部分" class="headerlink" title="数据库部分"></a>数据库部分</h3><p>mybatis: 不会就看<a target="_blank" rel="noopener" href="https://baomidou.com/pages/24112f/">官网</a><br>@MapperScan(“com.mystore.mystoreapi.persistence”): </p>
+<p>lombok<br>Junit: 当JUnit运行时，它会自动运行所有标记为@Test的方法，并收集这些方法的运行结果，以此来确定测试是否通过。</p>
+<h3 id="用户模块"><a href="#用户模块" class="headerlink" title="用户模块"></a>用户模块</h3><h2 id="ch2存档"><a href="#ch2存档" class="headerlink" title="ch2存档"></a>ch2存档</h2><p>用户表设计：要有时间戳</p>
+
                 
               </div>
             
