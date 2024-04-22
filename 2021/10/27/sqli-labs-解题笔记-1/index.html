@@ -13,27 +13,27 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="John Doe">
+  <meta name="author" content="bl4zy">
   <meta name="keywords" content="">
   
     <meta name="description" content="注入的基本操作(字符型、数字型、优先匹配、强制字符转换), sqli_labs1-4关 1个菜b学sql注入的笔记，大佬绕过 前置知识: 10以内加减法、mysql语法，建议去w3school 俺第一次学的时候感觉进步很慢，很难，然后就咕咕了，后来发现还是要先打好基础，后面会简单一些 由于没学过数据库，0基础fw,所以前面水的比较多，后面就8废话了 另外，信安日记这篇讲得8错，很通俗，阔以对照着看">
 <meta property="og:type" content="article">
 <meta property="og:title" content="sqli_lab 解题笔记(1)">
-<meta property="og:url" content="http://example.com/2021/10/27/sqli-labs-%E8%A7%A3%E9%A2%98%E7%AC%94%E8%AE%B0-1/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="https://bl4zygao.github.io/2021/10/27/sqli-labs-%E8%A7%A3%E9%A2%98%E7%AC%94%E8%AE%B0-1/index.html">
+<meta property="og:site_name" content="bl4zy&#39;s_blog">
 <meta property="og:description" content="注入的基本操作(字符型、数字型、优先匹配、强制字符转换), sqli_labs1-4关 1个菜b学sql注入的笔记，大佬绕过 前置知识: 10以内加减法、mysql语法，建议去w3school 俺第一次学的时候感觉进步很慢，很难，然后就咕咕了，后来发现还是要先打好基础，后面会简单一些 由于没学过数据库，0基础fw,所以前面水的比较多，后面就8废话了 另外，信安日记这篇讲得8错，很通俗，阔以对照着看">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/images/sqli_labs/sqli_labs.png">
+<meta property="og:image" content="https://bl4zygao.github.io/images/sqli_labs/sqli_labs.png">
 <meta property="article:published_time" content="2021-10-27T11:32:55.000Z">
 <meta property="article:modified_time" content="2024-03-11T18:12:07.250Z">
-<meta property="article:author" content="John Doe">
+<meta property="article:author" content="bl4zy">
 <meta property="article:tag" content="web">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/images/sqli_labs/sqli_labs.png">
+<meta name="twitter:image" content="https://bl4zygao.github.io/images/sqli_labs/sqli_labs.png">
   
   
   
-  <title>sqli_lab 解题笔记(1) - Hexo</title>
+  <title>sqli_lab 解题笔记(1) - bl4zy&#39;s_blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -71,7 +71,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"bl4zygao.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -400,13 +400,13 @@ eg: select group_concat(column_name) from information_schema.columns where table
   <div class="license-box my-3">
     <div class="license-title">
       <div>sqli_lab 解题笔记(1)</div>
-      <div>http://example.com/2021/10/27/sqli-labs-解题笔记-1/</div>
+      <div>https://bl4zygao.github.io/2021/10/27/sqli-labs-解题笔记-1/</div>
     </div>
     <div class="license-meta">
       
         <div class="license-meta-item">
           <div>Author</div>
-          <div>John Doe</div>
+          <div>bl4zy</div>
         </div>
       
       

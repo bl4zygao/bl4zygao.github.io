@@ -13,28 +13,28 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="John Doe">
+  <meta name="author" content="bl4zy">
   <meta name="keywords" content="">
   
     <meta name="description" content="大佬绕过很久没刷sql注入了，然后就忘得差8多了，为此觉得有必要总结一手  注意在hackbar里输入+之类的符号和在url栏里输入是有差别的 关于绕过单引号绕过当sql语句是用单引号闭合，而单引号又被限制时，绕过的一些方法 用\将原有的’转义掉eg: 1?username&#x3D;1\&amp;password&#x3D;1 or 1&#x3D;1# (此处注意，如果浏览器使用burp代理或hackbar发送,注意检查把p">
 <meta property="og:type" content="article">
 <meta property="og:title" content="sql注入姿势总结">
-<meta property="og:url" content="http://example.com/2021/12/17/sql%E6%B3%A8%E5%85%A5%E5%A7%BF%E5%8A%BF%E7%9A%84%E6%80%BB%E7%BB%93/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="https://bl4zygao.github.io/2021/12/17/sql%E6%B3%A8%E5%85%A5%E5%A7%BF%E5%8A%BF%E7%9A%84%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="bl4zy&#39;s_blog">
 <meta property="og:description" content="大佬绕过很久没刷sql注入了，然后就忘得差8多了，为此觉得有必要总结一手  注意在hackbar里输入+之类的符号和在url栏里输入是有差别的 关于绕过单引号绕过当sql语句是用单引号闭合，而单引号又被限制时，绕过的一些方法 用\将原有的’转义掉eg: 1?username&#x3D;1\&amp;password&#x3D;1 or 1&#x3D;1# (此处注意，如果浏览器使用burp代理或hackbar发送,注意检查把p">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/images/sql%E6%B3%A8%E5%85%A5(1).png">
-<meta property="og:image" content="http://example.com/images/sqli_labs/sqli_labs(5).png">
+<meta property="og:image" content="https://bl4zygao.github.io/images/sql%E6%B3%A8%E5%85%A5(1).png">
+<meta property="og:image" content="https://bl4zygao.github.io/images/sqli_labs/sqli_labs(5).png">
 <meta property="article:published_time" content="2021-12-17T03:33:06.000Z">
 <meta property="article:modified_time" content="2022-07-17T14:01:18.000Z">
-<meta property="article:author" content="John Doe">
+<meta property="article:author" content="bl4zy">
 <meta property="article:tag" content="web">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/images/sql%E6%B3%A8%E5%85%A5(1).png">
+<meta name="twitter:image" content="https://bl4zygao.github.io/images/sql%E6%B3%A8%E5%85%A5(1).png">
   
   
   
-  <title>sql注入姿势总结 - Hexo</title>
+  <title>sql注入姿势总结 - bl4zy&#39;s_blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -72,7 +72,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"bl4zygao.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -469,13 +469,13 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>sql注入姿势总结</div>
-      <div>http://example.com/2021/12/17/sql注入姿势的总结/</div>
+      <div>https://bl4zygao.github.io/2021/12/17/sql注入姿势的总结/</div>
     </div>
     <div class="license-meta">
       
         <div class="license-meta-item">
           <div>Author</div>
-          <div>John Doe</div>
+          <div>bl4zy</div>
         </div>
       
       

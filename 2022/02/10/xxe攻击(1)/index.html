@@ -13,27 +13,27 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="John Doe">
+  <meta name="author" content="bl4zy">
   <meta name="keywords" content="">
   
     <meta name="description" content="菜鸡脑容量有限，学完删 XXE全称balabala，即xml外部实体注入 为此首先需要了解xml，在w3school学习后做了些笔记以备忘 其次需要学习php伪协议、php解析xml的一些功能函数 还有 xml很像html，用于标记文件，使其具有结构性，是标记性语言(类似ppt….个p)但xml是为了传输、存储数据，而8是显示数据 xml不做任何事情，也就是纯文本，用来存储、传输信息，类似json">
 <meta property="og:type" content="article">
 <meta property="og:title" content="xxe攻击(1)">
-<meta property="og:url" content="http://example.com/2022/02/10/xxe%E6%94%BB%E5%87%BB(1)/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="https://bl4zygao.github.io/2022/02/10/xxe%E6%94%BB%E5%87%BB(1)/index.html">
+<meta property="og:site_name" content="bl4zy&#39;s_blog">
 <meta property="og:description" content="菜鸡脑容量有限，学完删 XXE全称balabala，即xml外部实体注入 为此首先需要了解xml，在w3school学习后做了些笔记以备忘 其次需要学习php伪协议、php解析xml的一些功能函数 还有 xml很像html，用于标记文件，使其具有结构性，是标记性语言(类似ppt….个p)但xml是为了传输、存储数据，而8是显示数据 xml不做任何事情，也就是纯文本，用来存储、传输信息，类似json">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/img/%E7%A5%96%E5%AE%89.png">
+<meta property="og:image" content="https://bl4zygao.github.io/img/%E7%A5%96%E5%AE%89.png">
 <meta property="article:published_time" content="2022-02-10T14:41:02.000Z">
 <meta property="article:modified_time" content="2022-03-28T05:35:28.000Z">
-<meta property="article:author" content="John Doe">
+<meta property="article:author" content="bl4zy">
 <meta property="article:tag" content="web">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/img/%E7%A5%96%E5%AE%89.png">
+<meta name="twitter:image" content="https://bl4zygao.github.io/img/%E7%A5%96%E5%AE%89.png">
   
   
   
-  <title>xxe攻击(1) - Hexo</title>
+  <title>xxe攻击(1) - bl4zy&#39;s_blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -71,7 +71,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"bl4zygao.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -406,13 +406,13 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>xxe攻击(1)</div>
-      <div>http://example.com/2022/02/10/xxe攻击(1)/</div>
+      <div>https://bl4zygao.github.io/2022/02/10/xxe攻击(1)/</div>
     </div>
     <div class="license-meta">
       
         <div class="license-meta-item">
           <div>Author</div>
-          <div>John Doe</div>
+          <div>bl4zy</div>
         </div>
       
       

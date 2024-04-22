@@ -13,25 +13,25 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="John Doe">
+  <meta name="author" content="bl4zy">
   <meta name="keywords" content="">
   
     <meta name="description" content="因为平时不怎么用，而要用的时候老是忘….就干脆把常用的做个笔记 特殊字符^:1、匹配输入字符串的开始位置2、[^]表示[]内的内容不匹配eg:^[^ABC]$ $:匹配输入字符串的结尾位置 +:匹配单个或多个eg:^[0-9]$匹配单个数字，^[0-9]+$匹配多个数字)(可不是拼接的意思)^fu+Ck$，可匹配fuCk、fuuuuuuuuuuuuuuuuuuuuCk、fuuuuCk,不可匹配fc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="正则表达式备忘速查">
-<meta property="og:url" content="http://example.com/2022/01/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E9%80%9F%E6%9F%A5/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="https://bl4zygao.github.io/2022/01/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E9%80%9F%E6%9F%A5/index.html">
+<meta property="og:site_name" content="bl4zy&#39;s_blog">
 <meta property="og:description" content="因为平时不怎么用，而要用的时候老是忘….就干脆把常用的做个笔记 特殊字符^:1、匹配输入字符串的开始位置2、[^]表示[]内的内容不匹配eg:^[^ABC]$ $:匹配输入字符串的结尾位置 +:匹配单个或多个eg:^[0-9]$匹配单个数字，^[0-9]+$匹配多个数字)(可不是拼接的意思)^fu+Ck$，可匹配fuCk、fuuuuuuuuuuuuuuuuuuuuCk、fuuuuCk,不可匹配fc">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-01-05T11:00:09.000Z">
 <meta property="article:modified_time" content="2024-03-06T05:11:01.052Z">
-<meta property="article:author" content="John Doe">
+<meta property="article:author" content="bl4zy">
 <meta property="article:tag" content="寄科">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>正则表达式备忘速查 - Hexo</title>
+  <title>正则表达式备忘速查 - bl4zy&#39;s_blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -69,7 +69,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"bl4zygao.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -352,13 +352,13 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>正则表达式备忘速查</div>
-      <div>http://example.com/2022/01/05/正则表达式速查/</div>
+      <div>https://bl4zygao.github.io/2022/01/05/正则表达式速查/</div>
     </div>
     <div class="license-meta">
       
         <div class="license-meta-item">
           <div>Author</div>
-          <div>John Doe</div>
+          <div>bl4zy</div>
         </div>
       
       

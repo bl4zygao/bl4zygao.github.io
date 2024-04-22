@@ -13,23 +13,25 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="John Doe">
+  <meta name="author" content="bl4zy">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="jvav栈:  要知道用什么数据结构来做 优先级不高int、Integer 递归合并两个有序链表: 从尾部开始考虑，直到头部将两个升序链表合并为一个新的升序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的 1234567891011121314class Solution &#123;    public ListNode mergeTwoLists(ListNode l1, ListN">
+<meta property="og:type" content="article">
 <meta property="og:title" content="刷题">
-<meta property="og:url" content="http://example.com/2023/06/17/%E5%88%B7%E9%A2%98/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="https://bl4zygao.github.io/2023/06/17/%E5%88%B7%E9%A2%98/index.html">
+<meta property="og:site_name" content="bl4zy&#39;s_blog">
+<meta property="og:description" content="jvav栈:  要知道用什么数据结构来做 优先级不高int、Integer 递归合并两个有序链表: 从尾部开始考虑，直到头部将两个升序链表合并为一个新的升序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的 1234567891011121314class Solution &#123;    public ListNode mergeTwoLists(ListNode l1, ListN">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-06-17T07:34:53.000Z">
-<meta property="article:modified_time" content="2024-03-28T09:18:31.441Z">
-<meta property="article:author" content="John Doe">
+<meta property="article:modified_time" content="2024-04-07T04:39:17.393Z">
+<meta property="article:author" content="bl4zy">
 <meta property="article:tag" content="寄科">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>刷题 - Hexo</title>
+  <title>刷题 - bl4zy&#39;s_blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -67,7 +69,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"bl4zygao.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -230,7 +232,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 words
+          470 words
         
       </span>
     
@@ -241,7 +243,7 @@
         
         
         
-          1 mins
+          4 mins
         
       </span>
     
@@ -283,7 +285,26 @@
             
               <div class="markdown-body">
                 
-                
+                <h1 id="jvav"><a href="#jvav" class="headerlink" title="jvav"></a>jvav</h1><p>栈: </p>
+<p>要知道用什么数据结构来做</p>
+<h1 id="优先级不高"><a href="#优先级不高" class="headerlink" title="优先级不高"></a>优先级不高</h1><p>int、Integer</p>
+<h1 id="递归"><a href="#递归" class="headerlink" title="递归"></a>递归</h1><p>合并两个有序链表: 从尾部开始考虑，直到头部<br>将两个升序链表合并为一个新的升序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> ListNode <span class="hljs-title function_">mergeTwoLists</span><span class="hljs-params">(ListNode l1, ListNode l2)</span> &#123;<br>        <span class="hljs-keyword">if</span> (l1 == <span class="hljs-literal">null</span>) &#123;<span class="hljs-keyword">return</span> l2;&#125; <br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (l2 == <span class="hljs-literal">null</span>) &#123;<span class="hljs-keyword">return</span> l1;&#125; <br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (l1.val &lt; l2.val) &#123;<br>            l1.next = mergeTwoLists(l1.next, l2);<br>            <span class="hljs-keyword">return</span> l1;<br>        &#125; <br>        <span class="hljs-keyword">else</span> &#123;<br>            l2.next = mergeTwoLists(l1, l2.next);<br>            <span class="hljs-keyword">return</span> l2;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>Stack类型问题：Java中的Stack类只能接受引用类型作为泛型参数，不能直接使用基本数据类型。因此，你不能使用Stack<char>，而应该使用Stack<Character>。</p>
+<h1 id="二叉搜索树"><a href="#二叉搜索树" class="headerlink" title="二叉搜索树"></a>二叉搜索树</h1><p>性质：二叉搜索树的中序遍历一定是递增的</p>
+<h1 id="动态规划："><a href="#动态规划：" class="headerlink" title="动态规划："></a>动态规划：</h1><p>给定三个字符串 s1、s2、s3，请你帮忙验证 s3 是否是由 s1 和 s2 交错 组成的。<br>最优子结构：a[i]&#x3D;a[i-1]+b[i…]…balabala</p>
+<h2 id="滚动数组"><a href="#滚动数组" class="headerlink" title="滚动数组"></a>滚动数组</h2><h1 id="lang"><a href="#lang" class="headerlink" title="lang"></a>lang</h1><p>Scanner s&#x3D; new Scanner…</p>
+<h1 id="笔经"><a href="#笔经" class="headerlink" title="笔经"></a>笔经</h1><p><del>线程、进程区别</del></p>
+<p>页面间参数传递的方法有哪些：GET\POST、cookie、Session</p>
+<p>什么是依赖注入(DI)、控制反转(IoC)？背–DI: 组件不由自己来创建、管理对象，而由外部容器负责，然后注入到组件中。–IoC: 控制权从程序代码转移到容器。  –why: 减少耦合度</p>
+<p>接口、抽象类区别：抽象类可以被继承，接口不能；接口可以多重继承、抽象类不能。抽象类适用表示一种类，接口则是规范</p>
+<p>线程如何共享数据：<br>Forword和Redirect区别：</p>
+<p>servlet: </p>
+<p>如何唤醒阻塞</p>
+<h2 id="jvav-1"><a href="#jvav-1" class="headerlink" title="jvav"></a>jvav</h2><p>java里ArrayList和LinkedList：动态数组和链表<br>final的3个作用</p>
+<h2 id="springboot"><a href="#springboot" class="headerlink" title="springboot"></a>springboot</h2><p>Spring Boot中的Profile是如何工作的？ – Profile提供了一种方式，通过@Profile注解，可以指定某个组件在特定的Profile激活时才加载。</p>
+<h2 id="SQL"><a href="#SQL" class="headerlink" title="SQL:"></a>SQL:</h2><p>like+%:<br>limit+offset<br>order+desc</p>
+
                 
               </div>
             
@@ -329,13 +350,13 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>刷题</div>
-      <div>http://example.com/2023/06/17/刷题/</div>
+      <div>https://bl4zygao.github.io/2023/06/17/刷题/</div>
     </div>
     <div class="license-meta">
       
         <div class="license-meta-item">
           <div>Author</div>
-          <div>John Doe</div>
+          <div>bl4zy</div>
         </div>
       
       
@@ -383,8 +404,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/17/java/" title="jvav">
-                        <span class="hidden-mobile">jvav</span>
+                      <a href="/2023/04/17/java/" title="jvav面筋">
+                        <span class="hidden-mobile">jvav面筋</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
